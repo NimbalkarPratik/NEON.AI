@@ -1,1 +1,683 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Command WALL – Paelon Hospital</title>
+<style>
+/* ═══════════════════════════════════════════════════════
+   COMMAND WALL – 3 Layout Responsive Dashboard
+   ─ Desktop (≥1200px):  3 col × 2 row, sidebar, no scroll
+   ─ Tablet  (601-1199px): 2 col × 3 row, no sidebar, no scroll
+   ─ Mobile  (≤600px):  1 col stacked, no sidebar, vertical scroll
+   ─ No horizontal scroll on any breakpoint
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── @font-face (self-hosted — replace paths) ─── */
+@font-face { font-family:'DM Sans'; src:url('assets/fonts/dm-sans/DMSans-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'DM Sans'; src:url('assets/fonts/dm-sans/DMSans-Medium.woff2') format('woff2'); font-weight:500; font-display:swap; }
+@font-face { font-family:'DM Sans'; src:url('assets/fonts/dm-sans/DMSans-SemiBold.woff2') format('woff2'); font-weight:600; font-display:swap; }
+@font-face { font-family:'DM Sans'; src:url('assets/fonts/dm-sans/DMSans-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
+@font-face { font-family:'Inter'; src:url('assets/fonts/inter/Inter-Regular.woff2') format('woff2'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Inter'; src:url('assets/fonts/inter/Inter-Bold.woff2') format('woff2'); font-weight:700; font-display:swap; }
+
+/* ─── RESET ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ─── FLUID ROOT ─── */
+:root { font-size: clamp(10px, 0.85vw, 18px); }
+
+/* ─── TOKENS ─── */
+:root {
+  --bg:#13141d; --bg-card:#0e0f17; --bg-inner:#151623;
+  --bdr:#2e3046; --bdr-in:#2c2f4d;
+  --t1:#fff; --t2:#8a9bc2; --t3:#b1bcd8; --t4:#c4c4c4; --t5:#9ca3af;
+  --green:#0fae02; --green-b:#10d905; --red:#d03d01; --red-d:#dc0000; --amber:#dca837; --blue:#1c89d6;
+  --g-gn:rgba(17,205,1,0.58); --g-rd:rgba(255,80,80,0.5);
+  --grad-bar:linear-gradient(180deg,#378cf2,#062449);
+  --grad-gn:linear-gradient(90deg,#10d905,#017f00);
+  --grad-am:linear-gradient(90deg,#f7bc3d 44%,#da8600);
+  --grad-rd:linear-gradient(90deg,#ff5d19,#e00202);
+  --grad-hd:linear-gradient(90deg,#1a1c2e,#1e2040);
+  --grad-cell:linear-gradient(0deg,#151623 0%,#202445 62%,rgba(51,55,96,0.3) 75%,#4c5181 75%,#20233c 100%);
+  --r:0.75rem; --ri:0.5rem;
+  --sidebar:4rem; --topbar:3.2rem;
+  --f1:'DM Sans',system-ui,sans-serif; --f2:'Inter',system-ui,sans-serif;
+}
+
+/* ─── VIEWPORT LOCK (desktop/tablet) ─── */
+html,body {
+  height:100vh; height:100dvh; width:100vw;
+  overflow:hidden;
+  font-family:var(--f1); background:var(--bg); color:var(--t1);
+}
+
+/* ═══════════════════════════
+   TOPBAR
+   ═══════════════════════════ */
+.topbar {
+  position:fixed; top:0; left:0; right:0; height:var(--topbar);
+  background:linear-gradient(90deg,#0d0e18,#141526,#0d0e18);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 1rem; z-index:100; border-bottom:0.0625rem solid var(--bdr);
+}
+.tb-l { display:flex; align-items:center; gap:0.6rem; }
+.tb-menu { cursor:pointer; display:flex; flex-direction:column; gap:0.2rem; padding:0.3rem; background:none; border:none; }
+.tb-menu span { display:block; width:1rem; height:0.12rem; background:var(--t2); border-radius:1px; }
+.tb-crumb { display:flex; align-items:center; gap:0.4rem; font-size:0.85rem; }
+.tb-crumb .sep { color:var(--t2); }
+.tb-r { display:flex; align-items:center; gap:0.75rem; flex-wrap:nowrap; }
+
+.btn-pill {
+  background:#1a1b24; border:0.0625rem solid #232632; border-radius:1rem;
+  padding:0.3rem 0.7rem; color:var(--t2); font-size:0.8rem;
+  font-family:var(--f1); cursor:pointer; display:flex; align-items:center; gap:0.3rem;
+  white-space:nowrap; position:relative;
+}
+.btn-pill .dd { font-size:0.55em; }
+.currency-dd { display:none; position:absolute; top:110%; left:0; background:#1a1b24; border:0.0625rem solid #232632; border-radius:0.4rem; min-width:5rem; z-index:200; }
+.currency-dd.show { display:block; }
+.currency-dd button { display:block; width:100%; padding:0.35rem 0.7rem; background:none; border:none; color:var(--t2); font-size:0.75rem; cursor:pointer; text-align:left; font-family:var(--f1); }
+.currency-dd button:hover { background:#232632; color:var(--t1); }
+
+.tv-tog { display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:var(--t2); cursor:pointer; }
+.tv-track { width:2rem; height:1.1rem; background:#2a2d3e; border-radius:0.55rem; position:relative; transition:background 0.3s; }
+.tv-track::after { content:''; position:absolute; top:0.1rem; left:0.1rem; width:0.9rem; height:0.9rem; background:#555; border-radius:50%; transition:left 0.3s; }
+.tv-tog.active .tv-track { background:var(--green); }
+.tv-tog.active .tv-track::after { left:calc(100% - 1rem); background:var(--t1); }
+
+.sync {
+  display:flex; align-items:center; gap:0.4rem;
+  background:rgba(16,217,5,0.08); border:0.0625rem solid rgba(16,217,5,0.2);
+  border-radius:1rem; padding:0.3rem 0.7rem; font-size:0.7rem; white-space:nowrap;
+}
+.sync-dot { width:0.45rem; height:0.45rem; background:var(--green-b); border-radius:50%; flex-shrink:0; }
+.sync .lbl { color:var(--t2); }
+.sync .dt { font-weight:600; }
+
+.btn-period {
+  background:linear-gradient(135deg,#1c3a6e,#0f2244);
+  border:0.0625rem solid #2a4a7a; border-radius:1rem;
+  padding:0.3rem 0.8rem; color:var(--t1);
+  font-size:0.7rem; font-weight:600; cursor:pointer;
+  font-family:var(--f1); white-space:nowrap;
+}
+.more-btn { background:none; border:none; color:var(--t2); font-size:1rem; cursor:pointer; padding:0 0.2rem; }
+
+/* ═══════════════════════════
+   SIDEBAR (desktop only)
+   ═══════════════════════════ */
+.sidebar {
+  position:fixed; top:0; left:0; bottom:0; width:var(--sidebar);
+  background:var(--bg); border-right:0.0625rem solid var(--bdr);
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:calc(var(--topbar) + 1rem); gap:0.6rem; z-index:101;
+}
+.sb-i {
+  width:1.5rem; height:1.5rem; background:#2a2d3e; border-radius:0.3rem;
+  cursor:pointer; opacity:0.5; transition:opacity 0.2s, background 0.2s;
+}
+.sb-i:hover,.sb-i.active { opacity:1; background:#3a3f5c; }
+
+/* ═══════════════════════════
+   MAIN CONTAINER
+   ═══════════════════════════ */
+.main {
+  position:fixed; top:var(--topbar); left:var(--sidebar);
+  right:0; bottom:0;
+  padding:clamp(0.4rem,0.7vw,0.7rem);
+  overflow:hidden;
+}
+
+/* ═══════════════════════════
+   GRID — Desktop: 3×2
+   ═══════════════════════════ */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:1fr 1fr;
+  gap:clamp(0.4rem,0.6vw,0.65rem);
+  height:100%; width:100%;
+}
+
+/* ═══════════════════════════
+   CARD SHELL
+   ═══════════════════════════ */
+.card {
+  background:var(--bg-card); border:0.0625rem solid var(--bdr);
+  border-radius:var(--r); display:flex; flex-direction:column;
+  overflow:hidden; min-height:0;
+}
+.card-hd {
+  background:var(--grad-hd); padding:0.4rem 0.7rem;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:0.0625rem solid var(--bdr); flex-shrink:0;
+}
+.card-hd h2 { font-size:0.85rem; font-weight:600; margin:0; white-space:nowrap; }
+.card-act { display:flex; gap:0.35rem; }
+.card-act button { background:none; border:none; color:var(--t2); font-size:0.75rem; cursor:pointer; opacity:0.5; padding:0; }
+.card-act button:hover { opacity:1; }
+.card-bd { padding:clamp(0.35rem,0.5vw,0.65rem); flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ═══════════════════════════
+   1. BUSINESS HEALTH
+   ═══════════════════════════ */
+.bh-g { display:grid; grid-template-columns:1fr 1fr; gap:clamp(0.25rem,0.4vw,0.5rem); flex:1; min-height:0; }
+.bh-c {
+  background-image:var(--grad-cell); border:0.0625rem solid var(--bdr-in);
+  border-radius:var(--ri); padding:clamp(0.25rem,0.4vw,0.5rem);
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height:0; overflow:hidden;
+}
+.bh-l { font-size:0.65rem; font-weight:500; }
+.bh-vr { display:flex; align-items:center; gap:0.35rem; }
+.bh-v {
+  font-size:clamp(0.9rem,1.6vw,1.65rem); font-weight:700; line-height:1;
+  padding:0.2rem 0.5rem; border-radius:0.3rem;
+}
+.bh-v .u { font-size:0.55em; }
+.bh-v.gn { background:linear-gradient(135deg,#0fae02,#0a8a01); }
+.bh-v.rd { background:linear-gradient(135deg,#d03d01,#b32e00); }
+.bh-p { display:flex; flex-direction:column; align-items:center; gap:0.05rem; }
+.bh-p .ic { font-size:0.8rem; }
+.bh-p .pv { font-size:0.6rem; font-weight:500; }
+.bh-ft { display:flex; justify-content:space-between; align-items:center; font-size:0.65rem; }
+.bh-ft .tl { color:var(--t2); }
+.pop-l { color:var(--t2); }
+.glw-g { filter:drop-shadow(0 0 0.6rem var(--g-gn)); }
+.glw-r { filter:drop-shadow(0 0 0.6rem var(--g-rd)); }
+
+/* ═══════════════════════════
+   2. CUSTOMER COLLECTION
+   ═══════════════════════════ */
+.cc-hd { display:flex; padding:0 0 clamp(0.2rem,0.4vw,0.45rem); font-size:0.65rem; font-weight:500; }
+.cc-hd .sp { flex:1; }
+.cc-rs { flex:1; display:flex; flex-direction:column; gap:clamp(0.2rem,0.35vw,0.4rem); min-height:0; }
+.cc-r {
+  display:flex; align-items:center; background:var(--bg-inner);
+  border:0.0625rem solid var(--bdr-in); border-radius:var(--ri);
+  padding:0.35rem 0.55rem; flex:1; min-height:0;
+}
+.cc-r.amb { background:var(--bdr-in); }
+.cc-n { font-size:0.65rem; font-weight:500; flex:1; }
+.cc-t,.cc-a { font-size:clamp(0.8rem,1.4vw,1.3rem); font-weight:600; width:3rem; text-align:center; }
+.cc-t { color:#f5f8ff; }
+.cc-a.gn { color:var(--green); } .cc-a.am { color:var(--amber); } .cc-a.rd { color:var(--red); }
+.cc-a .pc { font-size:0.6em; }
+.cc-pp { display:flex; align-items:center; gap:0.15rem; font-size:0.6rem; min-width:2.2rem; margin-left:0.25rem; }
+
+/* ═══════════════════════════
+   3. RISK & COMPLIANCE
+   ═══════════════════════════ */
+.rc-items { flex:1; display:flex; flex-direction:column; justify-content:space-between; min-height:0; }
+.rc-lbl { font-size:0.65rem; font-weight:500; margin-bottom:0.25rem; }
+.rc-br { display:flex; align-items:center; gap:0.45rem; }
+.rc-tk { flex:1; height:clamp(0.7rem,1.3vh,1.2rem); position:relative; border-radius:0.1rem; }
+.rc-fl { height:100%; border-radius:0.1rem; position:absolute; left:0; top:0; }
+.rc-fl.gn { background:var(--grad-gn); } .rc-fl.rd { background:var(--grad-rd); }
+.rc-em { position:absolute; top:0; height:100%; border:0.0625rem solid #3e4e75; border-radius:0 0.1rem 0.1rem 0; }
+.rc-mk { position:absolute; top:-0.2rem; bottom:-0.4rem; width:0; border-left:0.0625rem dashed #3e4e75; }
+.rc-mp { position:absolute; bottom:-0.6rem; left:-0.25rem; border-left:0.25rem solid transparent; border-right:0.25rem solid transparent; border-top:0.25rem solid #3e4e75; }
+.rc-val { font-size:clamp(0.8rem,1.3vw,1.2rem); font-weight:600; white-space:nowrap; }
+.rc-val .pc { font-size:0.6em; }
+.rc-val.gn { color:var(--green); } .rc-val.rd { color:var(--red); }
+.rc-pop { display:flex; align-items:center; gap:0.15rem; font-size:0.6rem; }
+.rc-tgt { font-size:0.7rem; font-weight:500; text-align:center; margin-top:0.3rem; }
+.rc-tgt .l { color:var(--t2); }
+.rc-dv { border:none; border-top:0.0625rem solid var(--bdr-in); margin:clamp(0.2rem,0.5vh,0.5rem) 0; }
+
+/* ═══════════════════════════
+   4. CASH POSITION
+   ═══════════════════════════ */
+.cp-sub { font-size:0.65rem; font-weight:500; flex-shrink:0; }
+.cp-nt { font-size:0.45rem; color:var(--t4); margin-bottom:0.3rem; flex-shrink:0; }
+.cp-ch {
+  flex:1; display:flex; align-items:flex-end; justify-content:space-around;
+  position:relative; padding-left:1.8rem; min-height:0;
+  border-bottom:0.0625rem solid var(--bdr-in);
+}
+.cp-zero { position:absolute; left:1.8rem; right:0; border-top:0.0625rem dashed #fa0000; opacity:0.5; }
+.cp-ya {
+  position:absolute; left:0; top:0; bottom:0;
+  display:flex; flex-direction:column; justify-content:space-between;
+  font-size:0.5rem; color:var(--t2); font-weight:500;
+  width:1.6rem; text-align:right; padding-right:0.15rem;
+}
+.cp-col { display:flex; flex-direction:column; align-items:center; gap:0.1rem; flex:1; }
+.cp-br { width:clamp(0.6rem,1.8vw,1.3rem); border-radius:0.1rem 0.1rem 0 0; background:var(--grad-bar); }
+.cp-bv { font-size:0.5rem; font-weight:500; white-space:nowrap; }
+.cp-bl { font-size:0.5rem; color:var(--t2); margin-top:0.15rem; }
+.cp-lg { display:flex; gap:0.8rem; justify-content:center; margin-top:0.3rem; font-size:0.6rem; color:var(--t3); flex-shrink:0; }
+.cp-li { display:flex; align-items:center; gap:0.25rem; }
+.cp-dt { width:0.45rem; height:0.45rem; border-radius:0.12rem; }
+.cp-dt.r { background:#fa0000; } .cp-dt.b { background:#1e4e88; }
+
+/* ═══════════════════════════
+   5. SUPPLIER PAYMENTS
+   ═══════════════════════════ */
+.sp-t { flex-shrink:0; }
+.sp-lb { font-size:0.65rem; font-weight:500; margin-bottom:0.1rem; }
+.sp-vr { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem; }
+.sp-v { font-size:clamp(0.9rem,1.5vw,1.3rem); font-weight:600; }
+.sp-v .u { font-size:0.6em; }
+.sp-bdg { background:#0a1e3b; border:0.0625rem solid #173258; border-radius:2rem; padding:0.12rem 0.45rem; font-size:0.45rem; color:var(--t4); display:flex; align-items:center; gap:0.15rem; }
+.sp-sb { display:flex; height:clamp(0.7rem,1.3vh,1.2rem); border-radius:0.1rem; overflow:hidden; margin-bottom:0.12rem; }
+.sp-sg { display:flex; align-items:center; justify-content:center; font-size:0.55rem; font-weight:500; }
+.sp-sg.gn { background:var(--grad-gn); } .sp-sg.am { background:var(--grad-am); } .sp-sg.rd { background:var(--grad-rd); }
+.sp-ov { display:flex; align-items:center; gap:0.35rem; font-size:0.6rem; color:var(--t4); justify-content:center; margin-bottom:0.4rem; }
+.hr-bd { background:rgba(220,0,0,0.1); border:0.0625rem solid #dc0000; border-radius:0.3rem; padding:0.08rem 0.4rem; color:#dc0000; font-size:0.7rem; }
+
+/* VPE */
+.vpe { border-top:0.0625rem solid var(--bdr-in); padding-top:0.4rem; flex:1; min-height:0; display:flex; flex-direction:column; }
+.vpe-hd { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.25rem; }
+.vpe-tt { font-size:0.65rem; font-weight:500; }
+.vpe-tg { font-size:0.6rem; } .vpe-tg .l { color:var(--t2); }
+.vpe-ar { display:flex; align-items:center; gap:0.35rem; margin-bottom:0.25rem; }
+.vpe-al { font-size:0.6rem; color:var(--t2); }
+.vpe-av { font-size:clamp(0.85rem,1.4vw,1.3rem); font-weight:600; }
+.vpe-av .pc { font-size:0.6em; }
+.vpe-pp { display:flex; align-items:center; gap:0.15rem; font-size:0.6rem; }
+.vpe-br { height:0.4rem; display:flex; border-radius:0.1rem; overflow:hidden; margin-bottom:0.1rem; }
+.vpe-bl { display:flex; justify-content:space-between; font-size:0.55rem; color:var(--t2); }
+.vpe-inv { text-align:center; font-size:0.6rem; color:var(--t4); margin-top:0.25rem; }
+.vpe-inv .hl { color:var(--blue); }
+
+/* ═══════════════════════════
+   6. DSO
+   ═══════════════════════════ */
+.dso-bd { align-items:center; }
+.dso-gg { display:flex; flex-direction:column; align-items:center; flex:1; min-height:0; justify-content:space-between; }
+.gw { position:relative; width:clamp(7rem,13vw,12rem); aspect-ratio:200/110; }
+.gw svg { width:100%; height:100%; }
+.gv { position:absolute; top:30%; left:50%; transform:translate(-50%,0); font-family:var(--f2); font-size:clamp(0.9rem,1.5vw,1.4rem); font-weight:700; }
+.gv .pc { font-size:0.6em; }
+.gl { display:flex; gap:0.7rem; margin:0.2rem 0; }
+.gl-i { display:flex; align-items:center; gap:0.25rem; font-size:0.5rem; color:var(--t5); }
+.gl-d { width:0.4rem; height:0.4rem; border-radius:50%; }
+.gl-d.ex { background:#22c55e; } .gl-d.ac { background:#84cc16; } .gl-d.ar { background:#f97316; }
+.dso-m { display:grid; grid-template-columns:repeat(5,1fr); gap:0.2rem; width:100%; flex-shrink:0; }
+.dm-i { background:var(--bg-inner); padding:0.3rem 0.1rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:0.1rem; }
+.dm-ico { width:1.2rem; height:1.2rem; background:#1a1c2e; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.5rem; color:var(--t2); }
+.dm-lb { font-family:var(--f2); font-size:0.4rem; color:var(--t5); text-transform:uppercase; letter-spacing:0.02em; }
+.dm-vl { font-family:var(--f2); font-size:0.75rem; font-weight:700; }
+.dm-sb { font-family:var(--f2); font-size:0.35rem; color:var(--t5); line-height:1.3; }
+
+
+/* ═══════════════════════════════════════════
+   BREAKPOINT: TABLET (601px – 1199px)
+   2 col × 3 row, no sidebar, no scroll
+   ═══════════════════════════════════════════ */
+@media (max-width:1199px) {
+  :root { font-size:clamp(10px, 1.3vw, 15px); }
+
+  .sidebar { display:none; }
+  .main { left:0; }
+
+  .grid {
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr 1fr;
+  }
+
+  /* Reorder: BH, CC, RC, CP, SP, DSO */
+  .card:nth-child(1) { order:1; } /* Business Health */
+  .card:nth-child(2) { order:2; } /* Customer Collection */
+  .card:nth-child(3) { order:3; } /* Risk & Compliance */
+  .card:nth-child(4) { order:4; } /* Cash Position */
+  .card:nth-child(5) { order:5; } /* Supplier Payments */
+  .card:nth-child(6) { order:6; } /* DSO */
+}
+
+/* Tablet topbar adjustments */
+@media (max-width:1199px) {
+  .sync { display:none; }
+  .tb-r { gap:0.5rem; }
+}
+
+@media (max-width:900px) {
+  .tv-tog { display:none; }
+}
+
+
+/* ═══════════════════════════════════════════
+   BREAKPOINT: MOBILE (≤600px)
+   1 col stacked, vertical scroll allowed
+   ═══════════════════════════════════════════ */
+@media (max-width:600px) {
+  :root { font-size:clamp(12px, 3.5vw, 16px); }
+
+  html, body { overflow-y:auto; overflow-x:hidden; height:auto; }
+
+  .sidebar { display:none; }
+
+  .main {
+    position:relative; top:auto; left:auto; right:auto; bottom:auto;
+    margin-top:var(--topbar);
+    padding:0.5rem;
+    overflow:visible;
+    min-height:calc(100vh - var(--topbar));
+    min-height:calc(100dvh - var(--topbar));
+  }
+
+  .grid {
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    gap:0.5rem;
+    height:auto;
+  }
+
+  .card { min-height:auto; }
+
+  /* Give cards explicit heights on mobile so content is readable */
+  .card-bd { overflow:visible; }
+  .bh-g { min-height:10rem; }
+  .cc-rs { min-height:auto; }
+  .cc-r { min-height:2.5rem; flex:none; }
+  .cp-ch { min-height:10rem; flex:none; }
+  .gw { width:min(70vw, 14rem); }
+  .dso-m { grid-template-columns:repeat(5,1fr); }
+
+  /* Topbar mobile */
+  .topbar { padding:0 0.5rem; }
+  .tb-crumb .hname { display:none; }
+  .btn-period { display:none; }
+  .sync { display:none; }
+  .tv-tog { display:none; }
+  .btn-pill { padding:0.25rem 0.5rem; font-size:0.75rem; }
+}
+
+/* Very small phones */
+@media (max-width:380px) {
+  :root { font-size:clamp(11px, 3vw, 14px); }
+  .dso-m { grid-template-columns:repeat(3,1fr); }
+  .bh-g { grid-template-columns:1fr; min-height:auto; }
+}
+
+
+/* ═══════════════════════════════════════════
+   BREAKPOINT: LARGE SCREENS (≥1920px)
+   ═══════════════════════════════════════════ */
+@media (min-width:120rem) {
+  :root { font-size:clamp(16px, 0.9vw, 24px); }
+  .grid { max-width:120rem; margin:0 auto; }
+}
+
+/* 4K / TV Mode */
+@media (min-width:150rem) {
+  :root { font-size:clamp(20px, 0.8vw, 28px); }
+  .grid { max-width:160rem; margin:0 auto; }
+}
+
+/* ═══════════════════════════
+   TV MODE (JS toggle)
+   ═══════════════════════════ */
+body.tv-mode {
+  cursor:none;
+}
+body.tv-mode .topbar { opacity:0; pointer-events:none; transition:opacity 0.4s; }
+body.tv-mode .sidebar { opacity:0; pointer-events:none; transition:opacity 0.4s; }
+body.tv-mode .main { top:0; left:0; padding:0.5rem; }
+body.tv-mode .grid { gap:0.4rem; }
+body.tv-mode:hover .topbar,
+body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
+</style>
+</head>
+<body>
+
+<!-- ─── TOPBAR ─── -->
+<header class="topbar">
+  <div class="tb-l">
+    <button class="tb-menu" aria-label="Menu"><span></span><span></span><span></span></button>
+    <nav class="tb-crumb">
+      <span>🏠</span><span class="sep">›</span><span class="hname">Paelon Hospital</span>
+    </nav>
+  </div>
+  <div class="tb-r">
+    <div style="position:relative">
+      <button class="btn-pill" id="currencyBtn">USD <span class="dd">▾</span></button>
+      <div class="currency-dd" id="currencyDd">
+        <button data-val="USD">USD ($)</button>
+        <button data-val="NGN">NGN (₦)</button>
+        <button data-val="GBP">GBP (£)</button>
+        <button data-val="EUR">EUR (€)</button>
+      </div>
+    </div>
+    <div class="tv-tog" id="tvToggle">TV Mode <div class="tv-track"></div></div>
+    <div class="sync"><span class="sync-dot"></span><span class="lbl">Last synced :</span><span class="dt">Jun 22, 2026 1:05 PM</span></div>
+    <button class="btn-period" id="periodBtn">📅 Last 3 months</button>
+    <button class="more-btn" aria-label="More">⋮</button>
+  </div>
+</header>
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="sb-i active"></div>
+  <div class="sb-i"></div>
+  <div class="sb-i"></div>
+  <div class="sb-i"></div>
+  <div class="sb-i"></div>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+  <div class="grid">
+
+    <!-- ── 1. BUSINESS HEALTH ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Business Health</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd">
+        <div class="bh-g">
+          <div class="bh-c">
+            <span class="bh-l">Net Profit</span>
+            <div class="bh-vr"><span class="bh-v gn">-29.5<span class="u">M</span></span><div class="bh-p glw-g"><span class="ic" style="color:var(--green)">↑</span><span class="pv">+110.5%</span></div></div>
+            <div class="bh-ft"><span><span class="tl">Target:</span> 353M</span><span class="pop-l">PoP</span></div>
+          </div>
+          <div class="bh-c">
+            <span class="bh-l">Operation Margin</span>
+            <div class="bh-vr"><span class="bh-v rd">-4.8<span class="u">%</span></span><div class="bh-p glw-r"><span class="ic" style="color:var(--red)">↓</span><span class="pv">-110.6%</span></div></div>
+            <div class="bh-ft"><span><span class="tl">Target:</span> 95%</span><span class="pop-l">PoP</span></div>
+          </div>
+          <div class="bh-c">
+            <span class="bh-l">Total Operating Expense</span>
+            <div class="bh-vr"><span class="bh-v gn" style="font-size:clamp(1rem,1.8vw,1.9rem)">96<span class="u">%</span></span><div class="bh-p glw-r"><span class="ic" style="color:var(--red)">↓</span><span class="pv">+7.9%</span></div></div>
+            <div class="bh-ft"><span><span class="tl">Target:</span> 95%</span><span class="pop-l">PoP</span></div>
+          </div>
+          <div class="bh-c">
+            <span class="bh-l">Cash Burn Rate</span>
+            <div class="bh-vr"><span class="bh-v gn" style="font-size:clamp(1rem,1.8vw,1.9rem)">96<span class="u">%</span></span><div class="bh-p glw-r"><span class="ic" style="color:var(--red)">↓</span><span class="pv">+57.9%</span></div></div>
+            <div class="bh-ft"><span><span class="tl">Target:</span> 95%</span><span class="pop-l">PoP</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 2. CUSTOMER COLLECTION ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Customer Collection</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd">
+        <div class="cc-hd"><span class="sp"></span><span style="width:3rem;text-align:center">Target</span><span style="width:3rem;text-align:center">Achieved %</span><span style="min-width:2.2rem"></span></div>
+        <div class="cc-rs">
+          <div class="cc-r"><span class="cc-n">Average Invoice Value</span><span class="cc-t">4.5</span><span class="cc-a gn">4.8</span><span class="cc-pp"><span style="color:var(--green)">↑</span>+1%</span></div>
+          <div class="cc-r amb"><span class="cc-n">Collection Efficiency</span><span class="cc-t">4.5</span><span class="cc-a am">4.5</span><span class="cc-pp"><span style="color:var(--amber)">●</span>0</span></div>
+          <div class="cc-r"><span class="cc-n">Accounts Receivable</span><span class="cc-t">65<span class="pc">%</span></span><span class="cc-a rd">60<span class="pc">%</span></span><span class="cc-pp"><span style="color:var(--red)">↓</span>+1%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 3. RISK & COMPLIANCE ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Risk &amp; Compliance</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd">
+        <div class="rc-items">
+          <div>
+            <div class="rc-lbl">DSO Risk</div>
+            <div class="rc-br"><div class="rc-tk"><div class="rc-fl gn" style="width:65%"></div><div class="rc-mk" style="left:60%"><div class="rc-mp"></div></div></div><span class="rc-val gn">12</span><span class="rc-pop glw-g"><span style="color:var(--green)">↑</span>+1%</span></div>
+            <div class="rc-tgt"><span class="l">Target:</span> 10</div>
+          </div>
+          <hr class="rc-dv">
+          <div>
+            <div class="rc-lbl">Receivable Aging Risk</div>
+            <div class="rc-br"><div class="rc-tk"><div class="rc-fl rd" style="width:40%"></div><div class="rc-em" style="left:40%;right:0"></div><div class="rc-mk" style="left:52%"><div class="rc-mp"></div></div></div><span class="rc-val rd">60<span class="pc">%</span></span><span class="rc-pop glw-r"><span style="color:var(--red)">↓</span>+1%</span></div>
+            <div class="rc-tgt"><span class="l">Target:</span> 80%</div>
+          </div>
+          <hr class="rc-dv">
+          <div>
+            <div class="rc-lbl">Receivable Aging Risk</div>
+            <div class="rc-br"><div class="rc-tk"><div class="rc-fl rd" style="width:40%"></div><div class="rc-em" style="left:40%;right:0"></div><div class="rc-mk" style="left:52%"><div class="rc-mp"></div></div></div><span class="rc-val rd">60<span class="pc">%</span></span><span class="rc-pop glw-r"><span style="color:var(--red)">↓</span>+1%</span></div>
+            <div class="rc-tgt"><span class="l">Target:</span> 80%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 4. CASH POSITION ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Cash Position</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd">
+        <div class="cp-sub">6 week cash forecast</div>
+        <div class="cp-nt">All amount in millions</div>
+        <div class="cp-ch">
+          <div class="cp-ya"><span>60M</span><span>40M</span><span>20M</span><span>0</span><span>-20M</span><span>-40M</span><span>-60M</span><span>-80M</span></div>
+          <div class="cp-zero" style="bottom:57%"></div>
+          <div class="cp-col"><span class="cp-bv">128.4</span><div class="cp-br" style="height:48%"></div><span class="cp-bl">Mar'26</span></div>
+          <div class="cp-col"><span class="cp-bv">126.4</span><div class="cp-br" style="height:66%"></div><span class="cp-bl">Apr'26</span></div>
+          <div class="cp-col"><span class="cp-bv">90</span><div class="cp-br" style="height:20%"></div><span class="cp-bl">May'26</span></div>
+          <div class="cp-col"><span class="cp-bv">125</span><div class="cp-br" style="height:39%"></div><span class="cp-bl">Jun'26</span></div>
+          <div class="cp-col"><span class="cp-bv">60</span><div class="cp-br" style="height:75%"></div><span class="cp-bl">Jul'26</span></div>
+          <div class="cp-col"><span class="cp-bv">60</span><div class="cp-br" style="height:75%"></div><span class="cp-bl">Aug'26</span></div>
+        </div>
+        <div class="cp-lg"><div class="cp-li"><div class="cp-dt r"></div>Targeted</div><div class="cp-li"><div class="cp-dt b"></div>Achieved</div></div>
+      </div>
+    </div>
+
+    <!-- ── 5. SUPPLIER PAYMENTS ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Supplier Payments</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd">
+        <div class="sp-t">
+          <div class="sp-lb">Total Payables</div>
+          <div class="sp-vr"><span class="sp-v">200.5<span class="u">M</span></span><span class="sp-bdg">📅 30-Day View</span></div>
+          <div class="sp-sb">
+            <div class="sp-sg gn" style="width:22%"></div>
+            <div class="sp-sg am" style="width:20%">31-800 9%</div>
+            <div class="sp-sg rd" style="width:58%"><span style="margin-right:0.4rem">600 7%</span><span>300 20%</span></div>
+          </div>
+          <div class="sp-ov">Over 60D: 141.3M <span class="hr-bd">High Risk</span></div>
+        </div>
+        <div class="vpe">
+          <div class="vpe-hd"><span class="vpe-tt">Vendor Payment Efficiency</span><span class="vpe-tg"><span class="l">Target </span>88%</span></div>
+          <div class="vpe-ar"><span class="vpe-al">Actual</span><span class="vpe-av">77.1<span class="pc">%</span></span><span class="vpe-pp"><span style="color:var(--red)">↓</span>-14.3%</span></div>
+          <div class="vpe-br">
+            <div style="width:22%;background:var(--grad-gn);height:100%;border-radius:0.1rem 0 0 0.1rem"></div>
+            <div style="width:18%;background:var(--grad-am);height:100%"></div>
+            <div style="width:60%;background:var(--grad-rd);height:100%;border-radius:0 0.1rem 0.1rem 0"></div>
+          </div>
+          <div class="vpe-bl"><span>0</span><span>70</span><span>80</span><span style="color:var(--t1)">77.1%</span><span>100</span></div>
+          <div class="vpe-inv">On-time invoices: <span class="hl">310</span> / 402</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 6. DSO ── -->
+    <div class="card">
+      <div class="card-hd"><h2>Days Sales Outstanding (DSO)</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+      <div class="card-bd dso-bd">
+        <div class="dso-gg">
+          <div class="gw">
+            <svg viewBox="0 0 200 110">
+              <path d="M 20 100 A 80 80 0 0 1 60 35" stroke="#22c55e" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <path d="M 62 33 A 80 80 0 0 1 100 20" stroke="#84cc16" stroke-width="16" fill="none"/>
+              <path d="M 102 20 A 80 80 0 0 1 140 35" stroke="#eab308" stroke-width="16" fill="none"/>
+              <path d="M 142 37 A 80 80 0 0 1 180 100" stroke="#f97316" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <line x1="100" y1="100" x2="145" y2="50" stroke="white" stroke-width="2"/>
+              <circle cx="100" cy="100" r="5" fill="white"/>
+            </svg>
+            <div class="gv">60<span class="pc">%</span></div>
+          </div>
+          <div class="gl">
+            <div class="gl-i"><div class="gl-d ex"></div>Excellent</div>
+            <div class="gl-i"><div class="gl-d ac"></div>Acceptable</div>
+            <div class="gl-i"><div class="gl-d ar"></div>At risk</div>
+          </div>
+          <div class="dso-m">
+            <div class="dm-i"><div class="dm-ico">📋</div><div class="dm-lb">OPEN AR</div><div class="dm-vl">2.4B</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 36%</div></div>
+            <div class="dm-i"><div class="dm-ico">⏱</div><div class="dm-lb">OVERDUE AR</div><div class="dm-vl">640M</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 1.7%</div></div>
+            <div class="dm-i"><div class="dm-ico">📊</div><div class="dm-lb">CREDIT SALES</div><div class="dm-vl">5.1B</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 4.2%</div></div>
+            <div class="dm-i"><div class="dm-ico">🎯</div><div class="dm-lb">TARGET DSO</div><div class="dm-vl">30</div><div class="dm-sb">Days</div></div>
+            <div class="dm-i"><div class="dm-ico">⚡</div><div class="dm-lb">BPESO GAP</div><div class="dm-vl">8.4</div><div class="dm-sb">Days</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ═══════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // ── TV Mode Toggle ──
+  const tvToggle = document.getElementById('tvToggle');
+  if (tvToggle) {
+    tvToggle.addEventListener('click', function() {
+      this.classList.toggle('active');
+      document.body.classList.toggle('tv-mode');
+    });
+  }
+
+  // ── Currency Dropdown ──
+  const currBtn = document.getElementById('currencyBtn');
+  const currDd = document.getElementById('currencyDd');
+  if (currBtn && currDd) {
+    currBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      currDd.classList.toggle('show');
+    });
+    currDd.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currBtn.innerHTML = this.dataset.val + ' <span class="dd">▾</span>';
+        currDd.classList.remove('show');
+      });
+    });
+    document.addEventListener('click', function() {
+      currDd.classList.remove('show');
+    });
+  }
+
+  // ── Period Filter (placeholder) ──
+  const periodBtn = document.getElementById('periodBtn');
+  if (periodBtn) {
+    const periods = ['Last 3 months', 'Last 6 months', 'Last 12 months', 'YTD', 'Custom'];
+    let idx = 0;
+    periodBtn.addEventListener('click', function() {
+      idx = (idx + 1) % periods.length;
+      this.textContent = '📅 ' + periods[idx];
+    });
+  }
+
+  // ── Sidebar active state ──
+  document.querySelectorAll('.sb-i').forEach(function(icon) {
+    icon.addEventListener('click', function() {
+      document.querySelectorAll('.sb-i').forEach(function(i) { i.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
+
+  // ── Resize observer for layout logging ──
+  function logLayout() {
+    var w = window.innerWidth;
+    var layout = w >= 1200 ? 'desktop-3x2' : w >= 601 ? 'tablet-2x3' : 'mobile-1col';
+    console.log('[CommandWALL] Layout: ' + layout + ' @ ' + w + 'px, root-font: ' + getComputedStyle(document.documentElement).fontSize);
+  }
+  window.addEventListener('resize', logLayout);
+  logLayout();
+
+})();
+</script>
+
+</body>
+</html>
