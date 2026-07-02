@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -409,17 +408,232 @@ html,body {
 }
 
 /* ═══════════════════════════
-   TV MODE (JS toggle)
+   TV MODE (Fullscreen API)
    ═══════════════════════════ */
-body.tv-mode {
-  cursor:none;
-}
 body.tv-mode .topbar { opacity:0; pointer-events:none; transition:opacity 0.4s; }
 body.tv-mode .sidebar { opacity:0; pointer-events:none; transition:opacity 0.4s; }
 body.tv-mode .main { top:0; left:0; padding:0.5rem; }
 body.tv-mode .grid { gap:0.4rem; }
 body.tv-mode:hover .topbar,
 body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
+
+/* ═══════════════════════════
+   DATE RANGE POPUP
+   ═══════════════════════════ */
+.dr-overlay {
+  display:none; position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);
+  align-items:flex-start; justify-content:center; padding-top:3.8rem;
+}
+.dr-overlay.show { display:flex; }
+.dr-popup {
+  background:#141526; border:1px solid var(--bdr); border-radius:12px;
+  display:flex; width:min(780px, 94vw); max-height:calc(100vh - 4.5rem);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6); overflow:hidden;
+  font-family:var(--f1); font-size:14px; color:var(--t1);
+}
+
+/* Left — presets */
+.dr-presets {
+  width:180px; border-right:1px solid var(--bdr); padding:12px 0;
+  display:flex; flex-direction:column; flex-shrink:0;
+}
+.dr-presets button {
+  background:none; border:none; color:var(--t2); padding:10px 20px;
+  text-align:left; font-size:13px; font-family:var(--f1); cursor:pointer;
+  transition:background 0.15s, color 0.15s; border-radius:0;
+}
+.dr-presets button:hover { background:rgba(55,140,242,0.1); color:var(--t1); }
+.dr-presets button.active {
+  background:rgba(55,140,242,0.15); color:var(--blue);
+  font-weight:600; border-left:2px solid var(--blue);
+}
+
+/* Right — calendar area */
+.dr-cal-area { flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px; }
+
+/* Date inputs row */
+.dr-inputs { display:flex; gap:12px; align-items:center; }
+.dr-inputs label { font-size:12px; color:var(--t2); font-weight:500; }
+.dr-inputs input {
+  background:#1a1b2e; border:1px solid var(--bdr); border-radius:6px;
+  padding:8px 14px; color:var(--t1); font-family:var(--f1); font-size:13px;
+  width:150px; text-align:center; outline:none;
+}
+.dr-inputs input:focus { border-color:var(--blue); }
+.dr-input-grp { display:flex; flex-direction:column; gap:4px; }
+
+/* Calendars container */
+.dr-cals { display:flex; gap:16px; flex:1; }
+.dr-cal { flex:1; }
+
+/* Month header */
+.dr-month-hd {
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; margin-bottom:10px; font-size:14px; font-weight:600;
+}
+.dr-month-hd button {
+  background:none; border:none; color:var(--t2); font-size:16px;
+  cursor:pointer; padding:4px 8px; border-radius:4px;
+}
+.dr-month-hd button:hover { background:rgba(255,255,255,0.05); color:var(--t1); }
+
+/* Day grid */
+.dr-days {
+  display:grid; grid-template-columns:repeat(7,1fr); gap:2px;
+  text-align:center;
+}
+.dr-days .dh {
+  font-size:11px; color:var(--t5); font-weight:500;
+  padding:4px 0; user-select:none;
+}
+.dr-days .dd {
+  padding:6px 0; font-size:12px; border-radius:6px; cursor:pointer;
+  transition:background 0.15s, color 0.1s; user-select:none;
+  color:var(--t3);
+}
+.dr-days .dd:hover { background:rgba(55,140,242,0.15); }
+.dr-days .dd.empty { pointer-events:none; }
+.dr-days .dd.other { color:#3a3f5c; pointer-events:none; }
+.dr-days .dd.today { border:1px solid var(--blue); color:var(--blue); font-weight:600; }
+.dr-days .dd.in-range { background:rgba(55,140,242,0.12); color:var(--t1); border-radius:0; }
+.dr-days .dd.range-start { background:var(--blue); color:#fff; font-weight:600; border-radius:6px 0 0 6px; }
+.dr-days .dd.range-end { background:var(--blue); color:#fff; font-weight:600; border-radius:0 6px 6px 0; }
+.dr-days .dd.range-start.range-end { border-radius:6px; }
+
+/* Actions */
+.dr-actions { display:flex; justify-content:flex-end; gap:10px; padding-top:8px; border-top:1px solid var(--bdr); }
+.dr-actions button {
+  padding:8px 28px; border-radius:8px; font-size:13px;
+  font-family:var(--f1); font-weight:600; cursor:pointer; border:none;
+}
+.dr-btn-clear { background:#1e2040; color:var(--t2); }
+.dr-btn-clear:hover { background:#2a2d4e; color:var(--t1); }
+.dr-btn-apply { background:var(--blue); color:#fff; }
+.dr-btn-apply:hover { background:#2196f3; }
+
+/* Popup responsive */
+@media (max-width:600px) {
+  .dr-popup { flex-direction:column; width:95vw; }
+  .dr-presets { width:100%; flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid var(--bdr); padding:8px; }
+  .dr-presets button { padding:6px 12px; font-size:12px; }
+  .dr-cals { flex-direction:column; gap:12px; }
+  .dr-inputs { flex-wrap:wrap; }
+  .dr-inputs input { width:120px; }
+}
+
+/* ═══════════════════════════
+   KPI DETAIL POPUP
+   ═══════════════════════════ */
+.kpi-overlay {
+  display:none; position:fixed; inset:0; z-index:600;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(6px);
+  align-items:center; justify-content:center; padding:2rem;
+}
+.kpi-overlay.show { display:flex; }
+
+.kpi-popup {
+  background:#0e0f17; border:1px solid var(--bdr); border-radius:14px;
+  display:flex; width:min(1100px, 95vw); max-height:85vh;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(55,140,242,0.08);
+  overflow:hidden; font-family:var(--f1); font-size:14px; color:var(--t1);
+  animation:kpiIn 0.25s ease-out;
+}
+@keyframes kpiIn { from { opacity:0; transform:scale(0.96) translateY(8px); } to { opacity:1; transform:none; } }
+
+/* Popup header */
+.kpi-pop-hd {
+  position:absolute; top:0; left:0; right:0;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 24px; z-index:2;
+}
+.kpi-pop-title { font-size:18px; font-weight:700; }
+.kpi-pop-close {
+  width:36px; height:36px; background:rgba(255,255,255,0.06);
+  border:1px solid var(--bdr); border-radius:8px;
+  color:var(--t2); font-size:18px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; transition:all 0.15s;
+}
+.kpi-pop-close:hover { background:rgba(255,255,255,0.12); color:var(--t1); }
+
+/* Left — expanded KPIs */
+.kpi-pop-left {
+  flex:1; padding:60px 24px 24px; display:flex; flex-direction:column;
+  gap:12px; overflow-y:auto; position:relative;
+  border-right:1px solid var(--bdr);
+}
+.kpi-pop-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1; }
+
+.kpi-pop-cell {
+  background-image:var(--grad-cell); border:1px solid var(--bdr-in);
+  border-radius:10px; padding:16px; display:flex; flex-direction:column;
+  justify-content:space-between; min-height:140px; cursor:pointer;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.kpi-pop-cell:hover { border-color:rgba(55,140,242,0.3); }
+.kpi-pop-cell.active { border-color:var(--blue); box-shadow:0 0 16px rgba(55,140,242,0.15); }
+.kpi-pop-cell .kpc-name { font-size:13px; font-weight:500; color:var(--t3); margin-bottom:auto; }
+.kpi-pop-cell .kpc-val-row { display:flex; align-items:center; gap:10px; margin-top:12px; }
+.kpi-pop-cell .kpc-val {
+  font-size:26px; font-weight:700; padding:6px 16px; border-radius:7px;
+  line-height:1;
+}
+.kpi-pop-cell .kpc-val.gn { background:linear-gradient(135deg,#0fae02,#0a8a01); }
+.kpi-pop-cell .kpc-val.rd { background:linear-gradient(135deg,#d03d01,#b32e00); }
+.kpi-pop-cell .kpc-val .u { font-size:0.55em; }
+.kpi-pop-cell .kpc-pop { display:flex; align-items:center; gap:4px; font-size:13px; }
+.kpi-pop-cell .kpc-tgt { font-size:13px; margin-top:8px; }
+.kpi-pop-cell .kpc-tgt .tl { color:var(--t2); }
+
+/* Right — KPI detail panel */
+.kpi-pop-right {
+  width:360px; padding:60px 24px 24px; overflow-y:auto;
+  background:linear-gradient(180deg,#111225,#0e0f17);
+  flex-shrink:0;
+}
+.kpi-detail-card {
+  background:#141526; border:1px solid var(--bdr);
+  border-radius:10px; padding:20px; margin-bottom:14px;
+  position:relative; transition:border-color 0.2s;
+}
+.kpi-detail-card.active { border-color:rgba(55,140,242,0.3); }
+.kpi-detail-badge {
+  position:absolute; top:-1px; right:-1px;
+  background:var(--blue); color:#fff; font-size:11px; font-weight:700;
+  padding:3px 12px; border-radius:0 10px 0 8px;
+}
+.kpi-detail-label { font-size:11px; color:var(--t5); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.kpi-detail-val { font-size:18px; font-weight:700; margin-bottom:16px; }
+.kpi-detail-section { margin-bottom:14px; }
+.kpi-detail-section:last-child { margin-bottom:0; }
+.kpi-detail-section .kd-title { font-size:11px; color:var(--blue); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.kpi-detail-section .kd-text { font-size:13px; color:var(--t3); line-height:1.5; }
+
+/* KPI popup responsive */
+@media (max-width:800px) {
+  .kpi-popup { flex-direction:column; max-height:90vh; }
+  .kpi-pop-left { border-right:none; border-bottom:1px solid var(--bdr); flex:none; max-height:45vh; }
+  .kpi-pop-right { width:100%; flex:1; }
+}
+@media (max-width:500px) {
+  .kpi-pop-grid { grid-template-columns:1fr; }
+  .kpi-overlay { padding:0.5rem; }
+}
+
+/* ═══════════════════════════
+   DESIGN POLISH
+   ═══════════════════════════ */
+.card { transition:border-color 0.25s, box-shadow 0.25s; }
+.card:hover { border-color:rgba(55,140,242,0.15); box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+.card-hd h2 { letter-spacing:0.01em; }
+.card-act button { transition:opacity 0.15s, color 0.15s; font-size:0.8rem; }
+.card-act button:hover { opacity:1; color:var(--blue); }
+.bh-c { transition:border-color 0.2s; }
+.bh-c:hover { border-color:rgba(55,140,242,0.2); }
+.cc-r { transition:border-color 0.2s; }
+.cc-r:hover { border-color:rgba(55,140,242,0.2); }
+.topbar { background:linear-gradient(90deg,#0a0b14,#141526,#0a0b14); }
+.sidebar { background:linear-gradient(180deg,#0e0f17,#13141d); }
 </style>
 </head>
 <body>
@@ -463,8 +677,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
   <div class="grid">
 
     <!-- ── 1. BUSINESS HEALTH ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Business Health</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="bh">
+      <div class="card-hd"><h2>Business Health</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd">
         <div class="bh-g">
           <div class="bh-c">
@@ -492,8 +706,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     </div>
 
     <!-- ── 2. CUSTOMER COLLECTION ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Customer Collection</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="cc">
+      <div class="card-hd"><h2>Customer Collection</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd">
         <div class="cc-hd"><span class="sp"></span><span style="width:3rem;text-align:center">Target</span><span style="width:3rem;text-align:center">Achieved %</span><span style="min-width:2.2rem"></span></div>
         <div class="cc-rs">
@@ -505,8 +719,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     </div>
 
     <!-- ── 3. RISK & COMPLIANCE ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Risk &amp; Compliance</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="rc">
+      <div class="card-hd"><h2>Risk &amp; Compliance</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd">
         <div class="rc-items">
           <div>
@@ -531,8 +745,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     </div>
 
     <!-- ── 4. CASH POSITION ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Cash Position</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="cp">
+      <div class="card-hd"><h2>Cash Position</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd">
         <div class="cp-sub">6 week cash forecast</div>
         <div class="cp-nt">All amount in millions</div>
@@ -551,8 +765,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     </div>
 
     <!-- ── 5. SUPPLIER PAYMENTS ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Supplier Payments</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="sp">
+      <div class="card-hd"><h2>Supplier Payments</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd">
         <div class="sp-t">
           <div class="sp-lb">Total Payables</div>
@@ -579,8 +793,8 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     </div>
 
     <!-- ── 6. DSO ── -->
-    <div class="card">
-      <div class="card-hd"><h2>Days Sales Outstanding (DSO)</h2><div class="card-act"><button>↗</button><button>⊞</button></div></div>
+    <div class="card" data-card="dso">
+      <div class="card-hd"><h2>Days Sales Outstanding (DSO)</h2><div class="card-act"><button class="btn-expand" title="Expand">↗</button><button class="btn-detail" title="Details">→</button></div></div>
       <div class="card-bd dso-bd">
         <div class="dso-gg">
           <div class="gw">
@@ -613,6 +827,49 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
   </div>
 </main>
 
+<!-- ─── KPI DETAIL POPUP ─── -->
+<div class="kpi-overlay" id="kpiOverlay">
+  <div class="kpi-popup">
+    <div class="kpi-pop-hd">
+      <span class="kpi-pop-title" id="kpiPopTitle">Business Health</span>
+      <button class="kpi-pop-close" id="kpiClose">✕</button>
+    </div>
+    <div class="kpi-pop-left">
+      <div class="kpi-pop-grid" id="kpiGrid"></div>
+    </div>
+    <div class="kpi-pop-right" id="kpiDetails"></div>
+  </div>
+</div>
+
+<!-- ─── DATE RANGE POPUP ─── -->
+<div class="dr-overlay" id="drOverlay">
+  <div class="dr-popup">
+    <div class="dr-presets" id="drPresets">
+      <button data-range="7d">Last 7 days</button>
+      <button data-range="4w">Last 4 weeks</button>
+      <button data-range="3m" class="active">Last 3 months</button>
+      <button data-range="6m">Last 6 months</button>
+      <button data-range="mtd">Month to date</button>
+      <button data-range="qtd">Quarter to date</button>
+      <button data-range="ytd">Year to date</button>
+    </div>
+    <div class="dr-cal-area">
+      <div class="dr-inputs">
+        <div class="dr-input-grp"><label>Start</label><input type="text" id="drStart" readonly></div>
+        <div class="dr-input-grp"><label>End</label><input type="text" id="drEnd" readonly></div>
+      </div>
+      <div class="dr-cals">
+        <div class="dr-cal" id="drCalLeft"></div>
+        <div class="dr-cal" id="drCalRight"></div>
+      </div>
+      <div class="dr-actions">
+        <button class="dr-btn-clear" id="drClear">Clear</button>
+        <button class="dr-btn-apply" id="drApply">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════
      JAVASCRIPT
      ═══════════════════════════ -->
@@ -620,16 +877,43 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
 (function() {
   'use strict';
 
-  // ── TV Mode Toggle ──
+  /* ═══════════════════════════
+     1. TV MODE — Fullscreen API
+     ═══════════════════════════ */
   const tvToggle = document.getElementById('tvToggle');
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function enterFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+  function exitFullscreen() {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
+  function syncTvState(on) {
+    if (on) {
+      document.body.classList.add('tv-mode');
+      tvToggle && tvToggle.classList.add('active');
+    } else {
+      document.body.classList.remove('tv-mode');
+      tvToggle && tvToggle.classList.remove('active');
+    }
+  }
   if (tvToggle) {
     tvToggle.addEventListener('click', function() {
-      this.classList.toggle('active');
-      document.body.classList.toggle('tv-mode');
+      if (isFullscreen()) exitFullscreen();
+      else enterFullscreen();
     });
   }
+  document.addEventListener('fullscreenchange', function() { syncTvState(isFullscreen()); });
+  document.addEventListener('webkitfullscreenchange', function() { syncTvState(isFullscreen()); });
 
-  // ── Currency Dropdown ──
+  /* ═══════════════════════════
+     2. CURRENCY DROPDOWN
+     ═══════════════════════════ */
   const currBtn = document.getElementById('currencyBtn');
   const currDd = document.getElementById('currencyDd');
   if (currBtn && currDd) {
@@ -643,23 +927,12 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
         currDd.classList.remove('show');
       });
     });
-    document.addEventListener('click', function() {
-      currDd.classList.remove('show');
-    });
+    document.addEventListener('click', function() { currDd.classList.remove('show'); });
   }
 
-  // ── Period Filter (placeholder) ──
-  const periodBtn = document.getElementById('periodBtn');
-  if (periodBtn) {
-    const periods = ['Last 3 months', 'Last 6 months', 'Last 12 months', 'YTD', 'Custom'];
-    let idx = 0;
-    periodBtn.addEventListener('click', function() {
-      idx = (idx + 1) % periods.length;
-      this.textContent = '📅 ' + periods[idx];
-    });
-  }
-
-  // ── Sidebar active state ──
+  /* ═══════════════════════════
+     3. SIDEBAR
+     ═══════════════════════════ */
   document.querySelectorAll('.sb-i').forEach(function(icon) {
     icon.addEventListener('click', function() {
       document.querySelectorAll('.sb-i').forEach(function(i) { i.classList.remove('active'); });
@@ -667,11 +940,367 @@ body.tv-mode:hover .sidebar { opacity:1; pointer-events:auto; }
     });
   });
 
-  // ── Resize observer for layout logging ──
+  /* ═══════════════════════════
+     4. DATE RANGE PICKER
+     ═══════════════════════════ */
+  const overlay = document.getElementById('drOverlay');
+  const periodBtn = document.getElementById('periodBtn');
+  const drStart = document.getElementById('drStart');
+  const drEnd = document.getElementById('drEnd');
+  const calLeft = document.getElementById('drCalLeft');
+  const calRight = document.getElementById('drCalRight');
+  const presetsEl = document.getElementById('drPresets');
+
+  const TODAY = new Date(2026, 6, 2); // Jul 2, 2026
+  let rangeStart = null;
+  let rangeEnd = null;
+  let leftMonth = new Date(2026, 5, 1);  // Jun 2026
+  let rightMonth = new Date(2026, 6, 1); // Jul 2026
+  let activePreset = '3m';
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYS = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  function fmt(d) {
+    if (!d) return '';
+    var mm = String(d.getMonth()+1).padStart(2,'0');
+    var dd = String(d.getDate()).padStart(2,'0');
+    return mm + ' / ' + dd + ' / ' + d.getFullYear();
+  }
+
+  function sameDay(a, b) {
+    return a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  }
+
+  function inRange(d) {
+    if (!rangeStart || !rangeEnd) return false;
+    var t = d.getTime();
+    return t >= rangeStart.getTime() && t <= rangeEnd.getTime();
+  }
+
+  function calcPreset(key) {
+    var end = new Date(TODAY);
+    var start = new Date(TODAY);
+    switch(key) {
+      case '7d': start.setDate(end.getDate()-6); break;
+      case '4w': start.setDate(end.getDate()-27); break;
+      case '3m': start.setMonth(end.getMonth()-3); start.setDate(start.getDate()+1); break;
+      case '6m': start.setMonth(end.getMonth()-6); start.setDate(start.getDate()+1); break;
+      case 'mtd': start.setDate(1); break;
+      case 'qtd':
+        var q = Math.floor(end.getMonth()/3)*3;
+        start = new Date(end.getFullYear(), q, 1);
+        break;
+      case 'ytd': start = new Date(end.getFullYear(), 0, 1); break;
+    }
+    return { start: start, end: end };
+  }
+
+  function renderCal(container, monthDate, side) {
+    var y = monthDate.getFullYear(), m = monthDate.getMonth();
+    var firstDay = new Date(y, m, 1).getDay();
+    var daysInMonth = new Date(y, m+1, 0).getDate();
+
+    var html = '<div class="dr-month-hd">';
+    if (side === 'left') html += '<button class="cal-prev">‹</button>';
+    html += '<span>' + MONTHS[m] + ' ' + y + '</span>';
+    if (side === 'right') html += '<button class="cal-next">›</button>';
+    html += '</div><div class="dr-days">';
+
+    DAYS.forEach(function(d) { html += '<span class="dh">' + d + '</span>'; });
+
+    for (var i = 0; i < firstDay; i++) html += '<span class="dd empty"></span>';
+
+    for (var d = 1; d <= daysInMonth; d++) {
+      var dt = new Date(y, m, d);
+      var cls = 'dd';
+      if (sameDay(dt, TODAY)) cls += ' today';
+      if (sameDay(dt, rangeStart)) cls += ' range-start';
+      if (sameDay(dt, rangeEnd)) cls += ' range-end';
+      if (inRange(dt) && !sameDay(dt, rangeStart) && !sameDay(dt, rangeEnd)) cls += ' in-range';
+      html += '<span class="' + cls + '" data-d="' + d + '" data-m="' + m + '" data-y="' + y + '">' + d + '</span>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+
+    // Nav arrows
+    var prev = container.querySelector('.cal-prev');
+    var next = container.querySelector('.cal-next');
+    if (prev) prev.addEventListener('click', function() {
+      leftMonth.setMonth(leftMonth.getMonth()-1);
+      rightMonth.setMonth(rightMonth.getMonth()-1);
+      renderBoth();
+    });
+    if (next) next.addEventListener('click', function() {
+      leftMonth.setMonth(leftMonth.getMonth()+1);
+      rightMonth.setMonth(rightMonth.getMonth()+1);
+      renderBoth();
+    });
+
+    // Day clicks
+    container.querySelectorAll('.dd:not(.empty):not(.other)').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var clicked = new Date(+this.dataset.y, +this.dataset.m, +this.dataset.d);
+        if (!rangeStart || (rangeStart && rangeEnd)) {
+          rangeStart = clicked; rangeEnd = null;
+        } else {
+          if (clicked < rangeStart) { rangeEnd = rangeStart; rangeStart = clicked; }
+          else rangeEnd = clicked;
+        }
+        clearActivePreset();
+        renderBoth();
+      });
+    });
+  }
+
+  function renderBoth() {
+    renderCal(calLeft, leftMonth, 'left');
+    renderCal(calRight, rightMonth, 'right');
+    drStart.value = fmt(rangeStart);
+    drEnd.value = fmt(rangeEnd);
+  }
+
+  function clearActivePreset() {
+    activePreset = null;
+    presetsEl.querySelectorAll('button').forEach(function(b) { b.classList.remove('active'); });
+  }
+
+  function setPreset(key) {
+    activePreset = key;
+    var r = calcPreset(key);
+    rangeStart = r.start;
+    rangeEnd = r.end;
+    // Position calendars to show the range
+    leftMonth = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+    rightMonth = new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), 1);
+    // Ensure two different months shown
+    if (leftMonth.getTime() === rightMonth.getTime()) {
+      leftMonth = new Date(rightMonth.getFullYear(), rightMonth.getMonth()-1, 1);
+    }
+    presetsEl.querySelectorAll('button').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.range === key);
+    });
+    renderBoth();
+  }
+
+  function openPopup() { overlay.classList.add('show'); setPreset(activePreset || '3m'); }
+  function closePopup() { overlay.classList.remove('show'); }
+
+  // Period button opens popup
+  if (periodBtn) periodBtn.addEventListener('click', function(e) { e.stopPropagation(); openPopup(); });
+
+  // Overlay click closes
+  if (overlay) overlay.addEventListener('click', function(e) { if (e.target === overlay) closePopup(); });
+
+  // Preset buttons
+  if (presetsEl) {
+    presetsEl.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() { setPreset(this.dataset.range); });
+    });
+  }
+
+  // Clear
+  document.getElementById('drClear').addEventListener('click', function() {
+    rangeStart = null; rangeEnd = null;
+    clearActivePreset();
+    renderBoth();
+  });
+
+  // Apply
+  document.getElementById('drApply').addEventListener('click', function() {
+    if (rangeStart && rangeEnd) {
+      var label = activePreset
+        ? presetsEl.querySelector('[data-range="'+activePreset+'"]').textContent
+        : fmt(rangeStart) + ' – ' + fmt(rangeEnd);
+      periodBtn.textContent = '📅 ' + label;
+    }
+    closePopup();
+  });
+
+  /* ═══════════════════════════
+     5. KPI DETAIL POPUP
+     ═══════════════════════════ */
+  var KPI_DATA = {
+    bh: {
+      title: 'Business Health',
+      kpis: [
+        { name:'Net Profit', val:'₦ -207.1M', cls:'rd', pop:'-185.9%', popDir:'down', target:'₦ 354M',
+          desc:'Profit remaining after expenses',
+          popCalc:'((Current: ₦-207.1M - Prior: ₦241.2M) / Prior: ₦241.2M) * 100 = -185.86%',
+          targetDeriv:'Configured as fixed target of ₦354M' },
+        { name:'Operating Margin', val:'-51.4%', cls:'rd', pop:'-228.3%', popDir:'down', target:'20%',
+          desc:'Operating profit relative to revenue',
+          popCalc:'((Current: -51.4% - Prior: 17.8%) / Prior: 17.8%) * 100 = -228.3%',
+          targetDeriv:'Industry benchmark of 20% for healthcare' },
+        { name:'Total Operating Expense', val:'₦ 610M', cls:'gn', pop:'+69.0%', popDir:'up', target:'₦ 2.5B',
+          desc:'Sum of all operational costs',
+          popCalc:'((Current: ₦610M - Prior: ₦361M) / Prior: ₦361M) * 100 = +69.0%',
+          targetDeriv:'Budget-based target of ₦2.5B' },
+        { name:'Cash Burn Rate', val:'₦ 176.1M', cls:'gn', pop:'+28.0%', popDir:'up', target:'₦ 20.7B',
+          desc:'Rate of cash consumption over period',
+          popCalc:'((Current: ₦176.1M - Prior: ₦137.6M) / Prior: ₦137.6M) * 100 = +28.0%',
+          targetDeriv:'Configured as fixed target of ₦20.7B' }
+      ]
+    },
+    cc: {
+      title: 'Customer Collection',
+      kpis: [
+        { name:'Average Invoice Value', val:'4.8', cls:'gn', pop:'+1%', popDir:'up', target:'4.5',
+          desc:'Mean value across all invoices',
+          popCalc:'((Current: 4.8 - Prior: 4.75) / Prior: 4.75) * 100 = +1.05%',
+          targetDeriv:'Historical average baseline' },
+        { name:'Collection Efficiency', val:'4.5', cls:'rd', pop:'0%', popDir:'flat', target:'4.5',
+          desc:'Ratio of collected to billed revenue',
+          popCalc:'((Current: 4.5 - Prior: 4.5) / Prior: 4.5) * 100 = 0%',
+          targetDeriv:'Configured as fixed target of 4.5' },
+        { name:'Accounts Receivable', val:'60%', cls:'rd', pop:'+1%', popDir:'down', target:'65%',
+          desc:'Outstanding customer payments as percentage',
+          popCalc:'((Current: 60% - Prior: 59.4%) / Prior: 59.4%) * 100 = +1.0%',
+          targetDeriv:'Target collection rate of 65%' }
+      ]
+    },
+    rc: {
+      title: 'Risk & Compliance',
+      kpis: [
+        { name:'DSO Risk', val:'94.0%', cls:'gn', pop:'+8.4%', popDir:'up', target:'45%',
+          desc:'Days Sales Outstanding risk score',
+          popCalc:'((Current: 94.0% - Prior: 86.7%) / Prior: 86.7%) * 100 = +8.4%',
+          targetDeriv:'Regulatory threshold of 45%' },
+        { name:'Receivable Aging Risk', val:'85.9%', cls:'gn', pop:'+11.3%', popDir:'up', target:'10%',
+          desc:'Percentage of receivables past due',
+          popCalc:'((Current: 85.9% - Prior: 77.2%) / Prior: 77.2%) * 100 = +11.3%',
+          targetDeriv:'Industry benchmark of 10%' },
+        { name:'Payable Aging Risk', val:'60%', cls:'rd', pop:'+1%', popDir:'down', target:'80%',
+          desc:'Percentage of payables within terms',
+          popCalc:'((Current: 60% - Prior: 59.4%) / Prior: 59.4%) * 100 = +1.0%',
+          targetDeriv:'Configured as fixed target of 80%' }
+      ]
+    },
+    cp: {
+      title: 'Cash Position',
+      kpis: [
+        { name:'6-Week Cash Forecast', val:'₦ 56.1M', cls:'gn', pop:'+12%', popDir:'up', target:'₦ 50M',
+          desc:'Projected cash balance over 6 weeks',
+          popCalc:'Based on rolling average of cash inflows minus outflows',
+          targetDeriv:'Minimum cash reserve policy of ₦50M' },
+        { name:'Cash Burn Rate (Monthly)', val:'₦ 65.3M', cls:'rd', pop:'-8%', popDir:'down', target:'₦ 40M',
+          desc:'Monthly net cash consumption rate',
+          popCalc:'Total outflows minus inflows averaged over the period',
+          targetDeriv:'Board-approved monthly limit of ₦40M' }
+      ]
+    },
+    sp: {
+      title: 'Supplier Payments',
+      kpis: [
+        { name:'Total Payables', val:'200.5M', cls:'rd', pop:'+15%', popDir:'down', target:'₦ 150M',
+          desc:'Total outstanding supplier obligations',
+          popCalc:'Sum of all open payable line items',
+          targetDeriv:'Budget limit of ₦150M' },
+        { name:'Vendor Payment Efficiency', val:'77.1%', cls:'rd', pop:'-14.3%', popDir:'down', target:'88%',
+          desc:'On-time payment percentage to vendors',
+          popCalc:'(On-time invoices: 310 / Total invoices: 402) * 100 = 77.1%',
+          targetDeriv:'SLA commitment of 88% on-time payment' }
+      ]
+    },
+    dso: {
+      title: 'Days Sales Outstanding (DSO)',
+      kpis: [
+        { name:'DSO Score', val:'42.3', cls:'gn', pop:'-5 days', popDir:'up', target:'45 Days',
+          desc:'Average days to collect payment after sale',
+          popCalc:'(Accounts Receivable / Credit Sales) * Number of Days',
+          targetDeriv:'Industry target of 45 days' },
+        { name:'Open AR', val:'₦ 2.4B', cls:'rd', pop:'+36%', popDir:'down', target:'₦ 1.5B',
+          desc:'Total open accounts receivable balance',
+          popCalc:'Sum of all unpaid customer invoices',
+          targetDeriv:'Target receivable balance of ₦1.5B' },
+        { name:'Credit Sales', val:'₦ 5.1B', cls:'gn', pop:'+4.2%', popDir:'up', target:'₦ 5B',
+          desc:'Total revenue from credit transactions',
+          popCalc:'Sum of all credit-based sales for the period',
+          targetDeriv:'Sales forecast target of ₦5B' }
+      ]
+    }
+  };
+
+  var kpiOverlay = document.getElementById('kpiOverlay');
+  var kpiGrid = document.getElementById('kpiGrid');
+  var kpiDetails = document.getElementById('kpiDetails');
+  var kpiPopTitle = document.getElementById('kpiPopTitle');
+  var kpiClose = document.getElementById('kpiClose');
+  var activeKpiIdx = 0;
+
+  function renderKpiPopup(cardKey) {
+    var data = KPI_DATA[cardKey];
+    if (!data) return;
+    kpiPopTitle.textContent = data.title;
+
+    // Left grid
+    var gh = '';
+    data.kpis.forEach(function(k, i) {
+      var arrowIcon = k.popDir === 'up' ? '↑' : k.popDir === 'down' ? '↓' : '●';
+      var arrowColor = k.popDir === 'up' ? 'var(--green)' : k.popDir === 'down' ? 'var(--red)' : 'var(--amber)';
+      gh += '<div class="kpi-pop-cell' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '">';
+      gh += '<div class="kpc-name">' + k.name + '</div>';
+      gh += '<div class="kpc-val-row"><span class="kpc-val ' + k.cls + '">' + k.val + '</span>';
+      gh += '<span class="kpc-pop"><span style="color:' + arrowColor + '">' + arrowIcon + '</span> ' + k.pop + '</span></div>';
+      gh += '<div class="kpc-tgt"><span class="tl">Target:</span> ' + k.target + '</div>';
+      gh += '</div>';
+    });
+    kpiGrid.innerHTML = gh;
+
+    // Right detail cards
+    var dh = '';
+    data.kpis.forEach(function(k, i) {
+      dh += '<div class="kpi-detail-card' + (i === 0 ? ' active' : '') + '" data-idx="' + i + '">';
+      dh += '<div class="kpi-detail-badge">KPI #' + (i + 1) + '</div>';
+      dh += '<div class="kpi-detail-label">KPI Name</div>';
+      dh += '<div class="kpi-detail-val">' + k.name + '</div>';
+      dh += '<div class="kpi-detail-section"><div class="kd-title">Description</div><div class="kd-text">' + k.desc + '</div></div>';
+      dh += '<div class="kpi-detail-section"><div class="kd-title">P-O-P Calculation</div><div class="kd-text">' + k.popCalc + '</div></div>';
+      dh += '<div class="kpi-detail-section"><div class="kd-title">Target Derivation</div><div class="kd-text">' + k.targetDeriv + '</div></div>';
+      dh += '</div>';
+    });
+    kpiDetails.innerHTML = dh;
+
+    // Cell click → highlight both sides
+    kpiGrid.querySelectorAll('.kpi-pop-cell').forEach(function(cell) {
+      cell.addEventListener('click', function() {
+        var idx = +this.dataset.idx;
+        kpiGrid.querySelectorAll('.kpi-pop-cell').forEach(function(c) { c.classList.remove('active'); });
+        kpiDetails.querySelectorAll('.kpi-detail-card').forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        var detailCard = kpiDetails.querySelector('[data-idx="' + idx + '"]');
+        if (detailCard) {
+          detailCard.classList.add('active');
+          detailCard.scrollIntoView({ behavior:'smooth', block:'nearest' });
+        }
+      });
+    });
+
+    kpiOverlay.classList.add('show');
+  }
+
+  // Arrow button click → open popup
+  document.querySelectorAll('.btn-detail').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var card = this.closest('[data-card]');
+      if (card) renderKpiPopup(card.dataset.card);
+    });
+  });
+
+  // Close
+  if (kpiClose) kpiClose.addEventListener('click', function() { kpiOverlay.classList.remove('show'); });
+  if (kpiOverlay) kpiOverlay.addEventListener('click', function(e) { if (e.target === kpiOverlay) kpiOverlay.classList.remove('show'); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') kpiOverlay.classList.remove('show'); });
+
+  /* ═══════════════════════════
+     6. LAYOUT LOGGER
+     ═══════════════════════════ */
   function logLayout() {
     var w = window.innerWidth;
     var layout = w >= 1200 ? 'desktop-3x2' : w >= 601 ? 'tablet-2x3' : 'mobile-1col';
-    console.log('[CommandWALL] Layout: ' + layout + ' @ ' + w + 'px, root-font: ' + getComputedStyle(document.documentElement).fontSize);
+    console.log('[CommandWALL] ' + layout + ' @ ' + w + 'px');
   }
   window.addEventListener('resize', logLayout);
   logLayout();
