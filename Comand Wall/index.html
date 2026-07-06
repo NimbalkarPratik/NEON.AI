@@ -1,1 +1,1634 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Command WALL – Paelon Hospital</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100vh;
+        overflow: hidden;
+        background: #0b0c14;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+      }
 
+      /* ── TOPBAR ── */
+      .topbar {
+        height: 44px;
+        background: #0e0f18;
+        border-bottom: 1px solid #1e2035;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+      .tb-l {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #fff;
+      }
+      .tb-l .home {
+        background: none;
+        border: none;
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      .home img {
+        width: 1rem;
+      }
+      .tb-l .sep {
+        color: #555;
+      }
+      .tb-r {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .btn-cur {
+        background: #13141e;
+        border: 1px solid #252840;
+        border-radius: 20px;
+        padding: 5px 14px;
+        color: #8a9bc2;
+        font-size: 13px;
+        font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .btn-cur .ar {
+        font-size: 9px;
+      }
+      .tv {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: #8a9bc2;
+        cursor: pointer;
+      }
+      .tv-sw {
+        width: 34px;
+        height: 19px;
+        background: #252840;
+        border-radius: 10px;
+        position: relative;
+      }
+      .tv-sw::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 15px;
+        height: 15px;
+        background: #555;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      .tv.on .tv-sw {
+        background: #0fae02;
+      }
+      .tv.on .tv-sw::after {
+        left: 17px;
+        background: #fff;
+      }
+      .sync {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(16, 217, 5, 0.07);
+        border: 1px solid rgba(16, 217, 5, 0.18);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 11px;
+      }
+      .sync-dot {
+        width: 7px;
+        height: 7px;
+        background: #10d905;
+        border-radius: 50%;
+      }
+      .sync .l {
+        color: #6b7a9e;
+      }
+      .sync .b {
+        color: #fff;
+        font-weight: 600;
+      }
+      .btn-per {
+        background: linear-gradient(135deg, #1a3568, #0f2244);
+        border: 1px solid #264a80;
+        border-radius: 20px;
+        padding: 5px 16px;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        height: calc(100vh - 44px);
+        padding: 14px 16px;
+        overflow: hidden;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr 1fr;
+        gap: 12px;
+        height: 100%;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: #0e0f18;
+        border: 1px solid #1e2035;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .card.selected {
+        border-color: #2d8cf0;
+        box-shadow:
+          0 0 0 1px #2d8cf0,
+          0 0 20px rgba(45, 140, 240, 0.12);
+      }
+      .c-hd {
+        background: linear-gradient(90deg, #141628, #1a1d38);
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #1e2035;
+        flex-shrink: 0;
+      }
+      .c-hd h2 {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+      .c-icons {
+        display: flex;
+        gap: 6px;
+      }
+      .c-icons button {
+        background: none;
+        border: none;
+        border-radius: 4px;
+        /* color: #6b7a9e;
+        width: 28px;
+        height: 28px;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0; */
+      }
+      .c-icons button:hover {
+        background: rgba(255, 255, 255, 0.05);
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      .new_tab img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+      .arrow_right img {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+      .c-bd {
+        padding: 12px 14px;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* ═══ BUSINESS HEALTH ═══ */
+      .bh-g {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        flex: 1;
+        min-height: 0;
+      }
+      .bh-c {
+        background: #121425;
+        border: 1px solid #232648;
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .bh-c::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 25%;
+        background: linear-gradient(90deg, #363a6a, #555a96, #363a6a);
+      }
+      .bh-n {
+        font-size: 11px;
+        font-weight: 500;
+        color: #c8d0e8;
+        z-index: 1;
+      }
+      .bh-vr {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: auto 0;
+      }
+      .bh-v {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 5px 12px;
+        border-radius: 7px;
+      }
+      .bh-v .u {
+        font-size: 13px;
+      }
+      .bh-v.gn {
+        background: linear-gradient(135deg, #14b800, #0a8f00);
+        box-shadow: 0 3px 14px rgba(16, 217, 5, 0.28);
+      }
+      .bh-v.rd {
+        background: linear-gradient(135deg, #e04400, #c03000);
+        box-shadow: 0 3px 14px rgba(220, 60, 0, 0.28);
+      }
+      .bh-pop {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+      }
+      .bh-pop .arr {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 45% 40%, #2ecc2e, #0a8f00 70%);
+        box-shadow:
+          0 2px 12px rgba(16, 217, 5, 0.45),
+          inset 0 1px 2px rgba(255, 255, 255, 0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #fff;
+        line-height: 1;
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      .bh-pop .green_arr {
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 51%;
+        background: rgb(101 255 81 / 55%);
+        /* border: 1px solid rgba(16, 217, 5, 0.4); */
+        box-shadow: 0 0 6px rgb(13 251 0 / 60%), 0 0 12px rgb(33 255 20 / 40%), inset 0 0 6px rgb(19 250 6 / 30%);
+        text-shadow: 0 0 6px rgba(16, 217, 5, .8);
+        transition: .3s ease;
+      }
+
+      .bh-pop .arr.flat{
+  background:radial-gradient(circle at 45% 40%,#e8b830,#b8860b 70%);
+  box-shadow:0 2px 12px rgba(220,168,55,.45),inset 0 1px 2px rgba(255,255,255,.2);
+  color:#fff;
+}
+
+      .bh-pop .yellow_arr {
+        width: 22px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #b8860b;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 51%;
+        background: rgb(101 255 81 / 55%);
+        /* border: 1px solid rgba(16, 217, 5, 0.4); */
+        box-shadow: 0 0 6px rgb(13 251 0 / 60%), 0 0 12px rgb(33 255 20 / 40%), inset 0 0 6px rgb(19 250 6 / 30%);
+        text-shadow: 0 0 6px rgba(16, 217, 5, .8);
+        transition: .3s ease;
+      }
+
+      .bh-pop .red_arr {
+        width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 51%;
+    background: #d02424;
+    /* border: 1px solid rgba(16, 217, 5, 0.4); */
+    box-shadow: 0 0 6px #dc0000, 0 0 12px #dc0000, inset 0 0 6px rgb(19 250 6 / 30%);
+    text-shadow: 0 0 6px #dc0000;
+    transition: .3s ease;
+      }
+
+      .bh-pop .pv {
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .glw-g {
+        filter: drop-shadow(0 0 8px rgba(17, 205, 1, 0.5));
+      }
+      .glw-r {
+        filter: drop-shadow(0 0 8px rgba(255, 80, 80, 0.45));
+      }
+      .bh-ft {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+      }
+      .bh-ft .tl {
+        color: #6b7a9e;
+      }
+      .bh-ft .pop {
+        color: #6b7a9e;
+      }
+
+      /* ═══ CUSTOMER COLLECTION ═══ */
+      .cc-hd {
+        display: flex;
+        padding: 2px 10px 10px;
+        font-size: 11px;
+        font-weight: 500;
+        color: #c8d0e8;
+      }
+      .cc-hd .sp {
+        flex: 1;
+      }
+      .cc-rs {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 0;
+      }
+      .cc-r {
+        display: flex;
+        align-items: center;
+        background: #121425;
+        border: 1px solid #232648;
+        border-radius: 8px;
+        padding: 10px 10px;
+        flex: 1;
+        min-height: 0;
+      }
+      .cc-r.amb {
+        background: #16172e;
+      }
+      .cc-nm {
+        font-size: 11px;
+        font-weight: 500;
+        flex: 1;
+        color: #c8d0e8;
+      }
+      .cc-tv,
+      .cc-av {
+        font-size: 22px;
+        font-weight: 600;
+        width: 50px;
+        text-align: center;
+      }
+      .cc-tv {
+        color: #e8ecf8;
+      }
+      .cc-av.g {
+        color: #0fae02;
+      }
+      .cc-av.a {
+        color: #dca837;
+      }
+      .cc-av.r {
+        color: #fff;
+      }
+      .cc-av .pc {
+        font-size: 12px;
+      }
+      .cc-pp {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        margin-left: 6px;
+        min-width: 40px;
+      }
+
+      /* ═══ RISK & COMPLIANCE ═══ */
+      .rc-items {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 0;
+      }
+      .rc-lbl {
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #c8d0e8;
+      }
+      .rc-br {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .rc-tk {
+        flex: 1;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 3px;
+        position: relative;
+      }
+      .rc-fl {
+        height: 100%;
+        border-radius: 3px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .rc-fl.gn {
+        background: linear-gradient(90deg, #10d905, #017f00);
+      }
+      .rc-fl.rd {
+        background: linear-gradient(90deg, #ff5d19, #e00202);
+      }
+      .rc-em {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        border: 1px solid #3e5070;
+        border-radius: 0 3px 3px 0;
+      }
+      .rc-mk {
+        position: absolute;
+        top: -5px;
+        bottom: -10px;
+        border-left: 1px dashed #fff;
+      }
+      .rc-mp {
+        position: absolute;
+        bottom: -2px;
+        left: -5px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #fff;
+      }
+      .rc-val {
+        font-size: 22px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .rc-val .pc {
+        font-size: 12px;
+      }
+      .rc-val.gn {
+        color: #10d905;
+      }
+      .rc-val.rd {
+        color: #fff;
+      }
+      .rc-pop {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+      }
+      .rc-tgt {
+        font-size: 12px;
+        margin-top: 8px;
+        text-align: center;
+      }
+      .rc-tgt .l {
+        color: #6b7a9e;
+      }
+      .rc-dv {
+        border: none;
+        border-top: 1px solid #1e2035;
+        margin: 8px 0;
+      }
+
+      /* ═══ CASH POSITION ═══ */
+      .cp-sub {
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .cp-nt {
+        font-size: 9px;
+        color: #8a9bc2;
+        margin-bottom: 8px;
+      }
+      .cp-ch {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        position: relative;
+        padding-left: 36px;
+        min-height: 0;
+        border-bottom: 1px solid #1e2035;
+      }
+      .cp-zero {
+        position: absolute;
+        left: 36px;
+        right: 0;
+        border-top: 1px dashed #fa0000;
+        opacity: 0.4;
+      }
+      .cp-ya {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 9px;
+        color: #6b7a9e;
+        font-weight: 500;
+        width: 32px;
+        text-align: right;
+        padding-right: 4px;
+      }
+      .cp-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+      .cp-bar {
+        width: 22px;
+        border-radius: 3px 3px 0 0;
+        background: linear-gradient(180deg, #4a9cf5, #1a4a8a, #062449);
+      }
+      .cp-bv {
+        font-size: 9px;
+        font-weight: 600;
+        color: #b1bcd8;
+      }
+      .cp-bl {
+        font-size: 10px;
+        color: #6b7a9e;
+        margin-top: 4px;
+      }
+      .cp-lg {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        margin-top: 6px;
+        font-size: 11px;
+        color: #b1bcd8;
+        flex-shrink: 0;
+      }
+      .cp-li {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .cp-dt {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+      }
+      .cp-dt.r {
+        background: #fa0000;
+      }
+      .cp-dt.b {
+        background: #1e4e88;
+      }
+
+      /* ═══ SUPPLIER PAYMENTS ═══ */
+      .sp-lb {
+        font-size: 11px;
+        font-weight: 500;
+        margin-bottom: 3px;
+        color: #c8d0e8;
+      }
+      .sp-vr {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 6px;
+      }
+      .sp-v {
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .sp-v .u {
+        font-size: 13px;
+      }
+      .sp-bdg {
+        background: #0a1e3b;
+        border: 1px solid #173258;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 9px;
+        color: #8a9bc2;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .sp-sb {
+        display: flex;
+        height: 20px;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 3px;
+      }
+      .sp-sg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 500;
+      }
+      .sp-sg.gn {
+        background: linear-gradient(90deg, #10d905, #017f00);
+      }
+      .sp-sg.am {
+        background: linear-gradient(90deg, #f7bc3d, #da8600);
+      }
+      .sp-sg.rd {
+        background: linear-gradient(90deg, #ff5d19, #e00202);
+      }
+      .sp-ov {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: #8a9bc2;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .hr-bd {
+        background: rgba(220, 0, 0, 0.1);
+        border: 1px solid #dc0000;
+        border-radius: 6px;
+        padding: 2px 10px;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .vpe {
+        border-top: 1px solid #1e2035;
+        padding-top: 8px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+      .vpe-hd {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .vpe-tt {
+        font-size: 11px;
+        font-weight: 500;
+        color: #c8d0e8;
+      }
+      .vpe-tg {
+        font-size: 11px;
+      }
+      .vpe-tg .l {
+        color: #6b7a9e;
+      }
+      .vpe-ar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 6px;
+      }
+      .vpe-al {
+        font-size: 11px;
+        color: #6b7a9e;
+      }
+      .vpe-av {
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .vpe-av .pc {
+        font-size: 12px;
+      }
+      .vpe-pp {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+      }
+      .vpe-br {
+        height: 8px;
+        display: flex;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 2px;
+      }
+      .vpe-bl {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: #6b7a9e;
+      }
+      .vpe-inv {
+        text-align: center;
+        font-size: 11px;
+        color: #8a9bc2;
+        margin-top: 5px;
+      }
+      .vpe-inv .hl {
+        color: #1c89d6;
+        font-weight: 600;
+      }
+
+      /* ═══ DSO ═══ */
+      .dso-bd {
+        align-items: center;
+      }
+      .dso-gg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        min-height: 0;
+        justify-content: space-around;
+      }
+      .gw {
+        position: relative;
+        width: 180px;
+        aspect-ratio: 200/110;
+      }
+      .gw svg {
+        width: 100%;
+        height: 100%;
+      }
+      .gv {
+        position: absolute;
+        top: 28%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        font-family: "Inter", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .gv .pc {
+        font-size: 13px;
+      }
+      .gl {
+        display: flex;
+        gap: 12px;
+        margin: 4px 0;
+      }
+      .gl-i {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        color: #9ca3af;
+      }
+      .gl-d {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      .gl-d.ex {
+        background: #22c55e;
+      }
+      .gl-d.ac {
+        background: #84cc16;
+      }
+      .gl-d.ar {
+        background: #f97316;
+      }
+      .dso-m {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        width: 100%;
+        flex-shrink: 0;
+      }
+      .dm-i {
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 6px;
+        padding: 8px 2px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+      .dm-ico {
+        width: 24px;
+        height: 24px;
+        background: #1a1d35;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: #6b7a9e;
+      }
+      .dm-lb {
+        font-family: "Inter", sans-serif;
+        font-size: 8px;
+        color: #6b7a9e;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        font-weight: 500;
+      }
+      .dm-vl {
+        font-family: "Inter", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .dm-sb {
+        font-family: "Inter", sans-serif;
+        font-size: 7px;
+        color: #6b7a9e;
+        line-height: 1.3;
+      }
+
+      /* ── RESPONSIVE: TABLET (≤1199px) ── */
+      @media (max-width: 1199px) {
+        html,
+        body {
+          overflow-y: auto;
+          overflow-x: hidden;
+          height: auto;
+        }
+        .main {
+          height: auto;
+          overflow: visible;
+          padding: 10px;
+        }
+        .grid {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto;
+          height: auto;
+          gap: 10px;
+        }
+        .card {
+          min-height: auto;
+        }
+        .card.selected {
+          border-color: transparent;
+          box-shadow: none;
+        }
+        .c-hd h2 {
+          font-size: 13px;
+        }
+        .c-hd {
+          padding: 7px 12px;
+        }
+        .c-bd {
+          padding: 10px 12px;
+        }
+
+        /* BH compact */
+        .bh-g {
+          gap: 8px;
+        }
+        .bh-c {
+          padding: 8px 10px;
+        }
+        .bh-n {
+          font-size: 10px;
+          z-index: 1;
+          position: relative;
+          top: -4px;
+        }
+        .bh-v {
+          font-size: 20px !important;
+          padding: 4px 10px;
+        }
+        .bh-v .u {
+          font-size: 11px;
+        }
+        .bh-pop .pv {
+          font-size: 9px;
+        }
+        .bh-pop .arr {
+          font-size: 12px;
+        }
+        .bh-ft {
+          font-size: 10px;
+        }
+
+        /* CC */
+        .cc-hd {
+          font-size: 10px;
+        }
+        .cc-nm {
+          font-size: 10px;
+        }
+        .cc-tv,
+        .cc-av {
+          font-size: 18px;
+          width: 42px;
+        }
+        .cc-pp {
+          font-size: 10px;
+          position: relative;
+          left: 1rem;
+        }
+        .cc-rs {
+          gap: 6px;
+        }
+        .cc-r {
+          padding: 8px 10px;
+        }
+
+        /* RC */
+        .rc-lbl {
+          font-size: 10px;
+          margin-bottom: 4px;
+        }
+        .rc-tk {
+          height: 16px;
+        }
+        .rc-val {
+          font-size: 18px;
+        }
+        .rc-tgt {
+          font-size: 10px;
+          margin-top: 5px;
+        }
+        .rc-pop {
+          font-size: 10px;
+        }
+        .rc-dv {
+          margin: 6px 0;
+        }
+
+        /* CP */
+        .cp-sub {
+          font-size: 10px;
+        }
+        .cp-nt {
+          font-size: 8px;
+          margin-bottom: 5px;
+        }
+        .cp-ch {
+          min-height: 160px;
+          padding-left: 30px;
+        }
+        .cp-ya {
+          font-size: 8px;
+          width: 28px;
+        }
+        .cp-bar {
+          width: 18px;
+        }
+        .cp-bv {
+          font-size: 8px;
+        }
+        .cp-bl {
+          font-size: 9px;
+        }
+        .cp-lg {
+          font-size: 10px;
+          margin-top: 5px;
+          gap: 12px;
+        }
+        .cp-dt {
+          width: 8px;
+          height: 8px;
+        }
+
+        /* SP */
+        .sp-lb {
+          font-size: 10px;
+        }
+        .sp-v {
+          font-size: 18px;
+        }
+        .sp-bdg {
+          font-size: 8px;
+          padding: 2px 8px;
+        }
+        .sp-sb {
+          height: 16px;
+        }
+        .sp-sg {
+          font-size: 9px;
+        }
+        .sp-ov {
+          font-size: 10px;
+        }
+        .hr-bd {
+          font-size: 10px;
+          padding: 2px 8px;
+        }
+        .vpe-tt {
+          font-size: 10px;
+        }
+        .vpe-tg {
+          font-size: 10px;
+        }
+        .vpe-al {
+          font-size: 10px;
+        }
+        .vpe-av {
+          font-size: 18px;
+        }
+        .vpe-pp {
+          font-size: 10px;
+        }
+        .vpe-bl {
+          font-size: 9px;
+        }
+        .vpe-inv {
+          font-size: 10px;
+        }
+        .vpe-br {
+          height: 7px;
+        }
+
+        /* DSO — 3+2 metric grid */
+        .gw {
+          width: 150px;
+        }
+        .gv {
+          font-size: 20px;
+        }
+        .gl {
+          gap: 10px;
+          margin: 3px 0;
+        }
+        .gl-i {
+          font-size: 9px;
+        }
+        .dso-m {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 5px;
+        }
+        .dm-i {
+          padding: 6px 2px;
+        }
+        .dm-ico {
+          width: 20px;
+          height: 20px;
+          font-size: 9px;
+        }
+        .dm-lb {
+          font-size: 7px;
+        }
+        .dm-vl {
+          font-size: 13px;
+        }
+        .dm-sb {
+          font-size: 6px;
+        }
+
+        .sync {
+          display: none;
+        }
+        .tv {
+          display: none;
+        }
+      }
+
+      /* ── RESPONSIVE: MOBILE (≤600px) ── */
+      @media (max-width: 600px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .btn-per {
+          display: none;
+        }
+        .topbar {
+          padding: 0 8px;
+        }
+        .main {
+          padding: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="tb-l">
+        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span
+        ><span>Paelon Hospital</span>
+      </div>
+      <div class="tb-r">
+        <button class="btn-cur">USD <span class="ar">▾</span></button>
+        <div class="tv" id="tv">
+          <span>TV Mode</span>
+          <div class="tv-sw"></div>
+        </div>
+        <div class="sync">
+          <span class="sync-dot"></span><span class="l">Last synced :</span
+          ><span class="b">Jun 22, 2026 1:05 PM</span>
+        </div>
+        <button class="btn-per">📅 Last 3 months</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="grid">
+        <!-- 1 BUSINESS HEALTH -->
+        <div class="card">
+          <div class="c-hd">
+            <h2>Business Health</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd">
+            <div class="bh-g">
+              <div class="bh-c">
+                <span class="bh-n">Net Profit</span>
+                <div class="bh-vr">
+                  <span class="bh-v gn">-29.5<span class="u">M</span></span>
+                  <div class="bh-pop glw-g">
+                    <span class="arr">↑</span
+                    ><span class="pv">+110.5%</span>
+                  </div>
+                </div>
+                <div class="bh-ft">
+                  <span><span class="tl">Target:</span> 353M</span
+                  ><span class="pop">PoP</span>
+                </div>
+              </div>
+              <div class="bh-c">
+                <span class="bh-n">Operation Margin</span>
+                <div class="bh-vr">
+                  <span class="bh-v rd">-4.8<span class="u">%</span></span>
+                  <div class="bh-pop glw-r">
+                    <span class="red_arr">↓</span
+                    ><span class="pv">-110.6%</span>
+                  </div>
+                </div>
+                <div class="bh-ft">
+                  <span><span class="tl">Target:</span> 95%</span
+                  ><span class="pop">PoP</span>
+                </div>
+              </div>
+              <div class="bh-c">
+                <span class="bh-n">Total Operating Expense</span>
+                <div class="bh-vr">
+                  <span class="bh-v gn" style="font-size: 28px"
+                    >96<span class="u">%</span></span
+                  >
+                  <div class="bh-pop glw-r">
+                    <span class="arr flat">−</span
+                    ><span class="pv">+7.9%</span>
+                  </div>
+                </div>
+                <div class="bh-ft">
+                  <span><span class="tl">Target:</span> 95%</span
+                  ><span class="pop">PoP</span>
+                </div>
+              </div>
+              <div class="bh-c">
+                <span class="bh-n">Cash Burn Rate</span>
+                <div class="bh-vr">
+                  <span class="bh-v gn" style="font-size: 28px"
+                    >96<span class="u">%</span></span
+                  >
+                  <div class="bh-pop glw-r">
+                    <span class="red_arr">↓</span
+                    ><span class="pv">+57.9%</span>
+                  </div>
+                </div>
+                <div class="bh-ft">
+                  <span><span class="tl">Target:</span> 95%</span
+                  ><span class="pop">PoP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 CUSTOMER COLLECTION -->
+        <div class="card selected">
+          <div class="c-hd">
+            <h2>Customer Collection</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd">
+            <div class="cc-hd">
+              <span class="sp"></span
+              ><span style="width: 50px; text-align: center; padding-right: 3rem;">Target</span
+              ><span style="width: 50px; text-align: center" padding-right: 3rem;">Achieved</span
+              ><span style="width: 40px; text-align: center" padding-right: 3rem;">%</span>
+            </div>
+            <div class="cc-rs">
+              <div class="cc-r">
+                <span class="cc-nm">Average Invoice Value</span
+                ><span class="cc-tv">4.5</span><span class="cc-av g">4.8</span
+                ><span class="cc-pp"
+                  ><span style="color: #0fae02">↑</span>+1%</span
+                >
+              </div>
+              <div class="cc-r amb">
+                <span class="cc-nm">Collection Efficiency</span
+                ><span class="cc-tv">4.5</span><span class="cc-av a">4.5</span
+                ><span class="cc-pp"
+                  ><span style="color: #dca837">●</span>0</span
+                >
+              </div>
+              <div class="cc-r">
+                <span class="cc-nm">Accounts Receivable</span
+                ><span class="cc-tv"
+                  >65<span class="pc" style="font-size: 12px">%</span></span
+                ><span class="cc-av r"
+                  >60<span class="pc" style="font-size: 12px">%</span></span
+                ><span class="cc-pp"
+                  ><span style="color: #dc0000">↓</span>+1%</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 RISK & COMPLIANCE -->
+        <div class="card">
+          <div class="c-hd">
+            <h2>Risk &amp; Compliance</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd">
+            <div class="rc-items">
+              <div>
+                <div class="rc-lbl">DSO Risk</div>
+                <div class="rc-br">
+                  <div class="rc-tk">
+                    <div class="rc-fl gn" style="width: 68%"></div>
+                    <div class="rc-mk" style="left: 62%">
+                      <div class="rc-mp"></div>
+                    </div>
+                  </div>
+                  <span class="rc-val gn">12</span
+                  ><span class="rc-pop glw-g"
+                    ><span style="color: #10d905">↑</span>+1%</span
+                  >
+                </div>
+                <div class="rc-tgt"><span class="l">Target:</span> 10</div>
+              </div>
+              <hr class="rc-dv" />
+              <div>
+                <div class="rc-lbl">Receivable Aging Risk</div>
+                <div class="rc-br">
+                  <div class="rc-tk">
+                    <div class="rc-fl rd" style="width: 42%"></div>
+                    <div class="rc-em" style="left: 42%; right: 0"></div>
+                    <div class="rc-mk" style="left: 55%">
+                      <div class="rc-mp"></div>
+                    </div>
+                  </div>
+                  <span class="rc-val rd">60<span class="pc">%</span></span
+                  ><span class="rc-pop glw-r"
+                    ><span style="color: #dc0000">↓</span>+1%</span
+                  >
+                </div>
+                <div class="rc-tgt"><span class="l">Target:</span> 80%</div>
+              </div>
+              <hr class="rc-dv" />
+              <div>
+                <div class="rc-lbl">Receivable Aging Risk</div>
+                <div class="rc-br">
+                  <div class="rc-tk">
+                    <div class="rc-fl rd" style="width: 42%"></div>
+                    <div class="rc-em" style="left: 42%; right: 0"></div>
+                    <div class="rc-mk" style="left: 55%">
+                      <div class="rc-mp"></div>
+                    </div>
+                  </div>
+                  <span class="rc-val rd">60<span class="pc">%</span></span
+                  ><span class="rc-pop glw-r"
+                    ><span style="color: #dc0000">↓</span>+1%</span
+                  >
+                </div>
+                <div class="rc-tgt"><span class="l">Target:</span> 80%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 CASH POSITION -->
+        <div class="card">
+          <div class="c-hd">
+            <h2>Cash Position</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd">
+            <div class="cp-sub">6 week cash forecast</div>
+            <div class="cp-nt">All amount in millions</div>
+            <div class="cp-ch">
+              <div class="cp-ya">
+                <span>60M</span><span>40M</span><span>20M</span><span>0</span
+                ><span>-20M</span><span>-40M</span><span>-60M</span
+                ><span>-80M</span>
+              </div>
+              <div class="cp-zero" style="bottom: 57%"></div>
+              <div class="cp-col">
+                <span class="cp-bv">128.4</span>
+                <div class="cp-bar" style="height: 48%"></div>
+                <span class="cp-bl">Mar'26</span>
+              </div>
+              <div class="cp-col">
+                <span class="cp-bv">126.4</span>
+                <div class="cp-bar" style="height: 66%"></div>
+                <span class="cp-bl">Apr'26</span>
+              </div>
+              <div class="cp-col">
+                <span class="cp-bv">90</span>
+                <div class="cp-bar" style="height: 20%"></div>
+                <span class="cp-bl">May'26</span>
+              </div>
+              <div class="cp-col">
+                <span class="cp-bv">125</span>
+                <div class="cp-bar" style="height: 39%"></div>
+                <span class="cp-bl">Jun'26</span>
+              </div>
+              <div class="cp-col">
+                <span class="cp-bv">60</span>
+                <div class="cp-bar" style="height: 75%"></div>
+                <span class="cp-bl">Jul'26</span>
+              </div>
+              <div class="cp-col">
+                <span class="cp-bv">60</span>
+                <div class="cp-bar" style="height: 75%"></div>
+                <span class="cp-bl">Aug'26</span>
+              </div>
+            </div>
+            <div class="cp-lg">
+              <div class="cp-li">
+                <div class="cp-dt r"></div>
+                Targeted
+              </div>
+              <div class="cp-li">
+                <div class="cp-dt b"></div>
+                Achieved
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 SUPPLIER PAYMENTS -->
+        <div class="card">
+          <div class="c-hd">
+            <h2>Supplier Payments</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd">
+            <div>
+              <div class="sp-lb">Total Payables</div>
+              <div class="sp-vr">
+                <span class="sp-v">200.5<span class="u">M</span></span
+                ><span class="sp-bdg">📅 30-Day View</span>
+              </div>
+              <div class="sp-sb">
+                <div class="sp-sg gn" style="width: 22%"></div>
+                <div class="sp-sg am" style="width: 20%">31-800 9%</div>
+                <div class="sp-sg rd" style="width: 58%">
+                  <span style="margin-right: 8px">600 7%</span
+                  ><span>300 20%</span>
+                </div>
+              </div>
+              <div class="sp-ov">
+                Over 60D: 141.3M <span class="hr-bd">High Risk</span>
+              </div>
+            </div>
+            <div class="vpe">
+              <div class="vpe-hd">
+                <span class="vpe-tt">Vendor Payment Efficiency</span
+                ><span class="vpe-tg"><span class="l">Target: </span>88%</span>
+              </div>
+              <div class="vpe-ar">
+                <span class="vpe-al">Actual</span
+                ><span class="vpe-av">77.1<span class="pc">%</span></span
+                ><span class="vpe-pp"
+                  ><span class="red_arr">↓</span>-14.3%</span
+                >
+              </div>
+              <div class="vpe-br">
+                <div
+                  style="
+                    width: 22%;
+                    background: linear-gradient(90deg, #10d905, #017f00);
+                    height: 100%;
+                    border-radius: 3px 0 0 3px;
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 18%;
+                    background: linear-gradient(90deg, #f7bc3d, #da8600);
+                    height: 100%;
+                  "
+                ></div>
+                <div
+                  style="
+                    width: 60%;
+                    background: linear-gradient(90deg, #ff5d19, #e00202);
+                    height: 100%;
+                    border-radius: 0 3px 3px 0;
+                  "
+                ></div>
+              </div>
+              <div class="vpe-bl">
+                <span>0</span><span>70</span><span>80</span
+                ><span style="color: #fff">77.1%</span><span>100</span>
+              </div>
+              <div class="vpe-inv">
+                On-time invoices: <span class="hl">310</span> / 402
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 DSO -->
+        <div class="card">
+          <div class="c-hd">
+            <h2>Days Sales Outstanding (DSO)</h2>
+            <div class="c-icons">
+              <button class="new_tab"><img src="./assets/new_tab.png" alt="" srcset=""></button>
+              <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
+            </div>
+          </div>
+          <div class="c-bd dso-bd">
+            <div class="dso-gg">
+              <div class="gw">
+                <svg viewBox="0 0 200 110">
+                  <path
+                    d="M 20 100 A 80 80 0 0 1 60 35"
+                    stroke="#22c55e"
+                    stroke-width="16"
+                    fill="none"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M 62 33 A 80 80 0 0 1 100 20"
+                    stroke="#84cc16"
+                    stroke-width="16"
+                    fill="none"
+                  />
+                  <path
+                    d="M 102 20 A 80 80 0 0 1 140 35"
+                    stroke="#eab308"
+                    stroke-width="16"
+                    fill="none"
+                  />
+                  <path
+                    d="M 142 37 A 80 80 0 0 1 180 100"
+                    stroke="#f97316"
+                    stroke-width="16"
+                    fill="none"
+                    stroke-linecap="round"
+                  />
+                  <line
+                    x1="100"
+                    y1="100"
+                    x2="145"
+                    y2="50"
+                    stroke="#fff"
+                    stroke-width="2"
+                  />
+                  <circle cx="100" cy="100" r="5" fill="#fff" />
+                </svg>
+                <div class="gv">60<span class="pc">%</span></div>
+              </div>
+              <div class="gl">
+                <div class="gl-i">
+                  <div class="gl-d ex"></div>
+                  Excellent
+                </div>
+                <div class="gl-i">
+                  <div class="gl-d ac"></div>
+                  Acceptable
+                </div>
+                <div class="gl-i">
+                  <div class="gl-d ar"></div>
+                  At risk
+                </div>
+              </div>
+              <div class="dso-m">
+                <div class="dm-i">
+                  <div class="dm-ico">📋</div>
+                  <div class="dm-lb">OPEN AR</div>
+                  <div class="dm-vl">2.4B</div>
+                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 36%</div>
+                </div>
+                <div class="dm-i">
+                  <div class="dm-ico">⏱</div>
+                  <div class="dm-lb">OVERDUE AR</div>
+                  <div class="dm-vl">640M</div>
+                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 1.7%</div>
+                </div>
+                <div class="dm-i">
+                  <div class="dm-ico">📊</div>
+                  <div class="dm-lb">CREDIT SALES</div>
+                  <div class="dm-vl">5.1B</div>
+                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 4.2%</div>
+                </div>
+                <div class="dm-i">
+                  <div class="dm-ico">🎯</div>
+                  <div class="dm-lb">TARGET DSO</div>
+                  <div class="dm-vl">30</div>
+                  <div class="dm-sb">Days</div>
+                </div>
+                <div class="dm-i">
+                  <div class="dm-ico">⚡</div>
+                  <div class="dm-lb">BPESO GAP</div>
+                  <div class="dm-vl">8.4</div>
+                  <div class="dm-sb">Days</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("tv").addEventListener("click", function () {
+        this.classList.toggle("on");
+        if (this.classList.contains("on")) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      });
+      document.addEventListener("fullscreenchange", function () {
+        if (!document.fullscreenElement)
+          document.getElementById("tv").classList.remove("on");
+      });
+      document.querySelectorAll(".new_tab").forEach(function (c) {
+        c.addEventListener("click", function () {
+          document.querySelectorAll(".card").forEach(function (x) {
+            x.classList.remove("selected");
+          });
+          this.classList.add("selected");
+        });
+      });
+      document.querySelectorAll(".arrow_right").forEach(function (c) {
+        c.addEventListener("click", function () {
+          document.querySelectorAll(".card").forEach(function (x) {
+            x.classList.remove("selected");
+          });
+          this.classList.add("selected");
+        });
+      });
+    </script>
+  </body>
+</html>
