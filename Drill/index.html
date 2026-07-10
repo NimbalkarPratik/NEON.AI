@@ -1,1 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Net Profit – KPI Detail</title>
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden}
+.header{
 
+    width:100%;
+    background:#121621;
+    border-top:2px solid #1b56ff;
+    border-left:1px solid #263042;
+    border-right:1px solid #263042;
+}
+
+/* ── TOPBAR ── */
+.topbar{height:44px;background:#0e0f18;border-bottom:1px solid #1e2035;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:8px;font-size:13px}
+.tb-l .sep{color:#555}
+.tb-r{display:flex;align-items:center;gap:14px}
+.pill{background:#13141e;border:1px solid #252840;border-radius:20px;padding:5px 14px;color:#8a9bc2;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+.run-info{font-size:11px;color:#6b7a9e}
+
+.topBar {
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #bfc7d7;
+        font-size: 13px;
+      }
+
+      .left i {
+        color: #4c6fff;
+        font-size: 14px;
+      }
+
+      .left a {
+        color: #4f78ff;
+        text-decoration: none;
+      }
+
+      .left span {
+        color: #ffffff;
+      }
+
+      /* right */
+
+      .right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pill {
+        height: 30px;
+        padding: 0 14px;
+        border-radius: 16px;
+        background: #1a2030;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #d6d9e0;
+        font-size: 12px;
+      }
+
+      /* TV Toggle */
+
+      .switch {
+        width: 36px;
+        height: 18px;
+        border-radius: 20px;
+        background: #41495d;
+        position: relative;
+      }
+
+      .switch::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        left: 2px;
+        top: 2px;
+      }
+
+      .greenDot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #16d463;
+        box-shadow: 0 0 10px #16d463;
+      }
+
+      .tv-sw {
+        width: 34px;
+        height: 19px;
+        background: #252840;
+        border-radius: 10px;
+        position: relative;
+      }
+      .tv-sw::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 15px;
+        height: 15px;
+        background: #555;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      .tv.on .tv-sw {
+        background: #0fae02;
+      }
+      .tv.on .tv-sw::after {
+        left: 17px;
+        background: #fff;
+      }
+
+      /* ================= SECOND BAR ================= */
+
+      .bottomBar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 12px;
+      }
+
+      .back {
+        color: #aab2c2;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        gap: 8px;
+        position: relative;
+        right: 100%;
+        margin-right: -0.7rem;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 6px;
+        background: #171b27;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 3px;
+      }
+
+      .tab {
+        padding: 7px 18px;
+        border-radius: 18px;
+        color: #8f96a8;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .tab.active {
+        background: #4f6dff;
+        color: white;
+        box-shadow: 0 0 15px rgba(79, 109, 255, 0.45);
+      }
+
+/* ── MAIN ── */
+.main{padding:16px 20px;max-width:1440px;margin:0 auto}
+
+/* ── KPI HERO ── */
+.hero{display:flex;align-items:center;justify-content:end;background:#0e0f18;border:1px solid #1e2035;border-radius:12px;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.hero-left{display:flex;align-items:center;gap:16px}
+.hero-icon{width:48px;height:48px;background:linear-gradient(135deg,#dc2626,#b91c1c);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.hero-title{font-size:22px;font-weight:700}
+.hero-badges{display:flex;gap:6px;margin-top:4px}
+.badge{padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase}
+.badge-danger{background:rgba(220,38,38,.15);color:#ef4444;border:1px solid rgba(220,38,38,.3)}
+.badge-all{background:rgba(55,140,242,.1);color:#3b82f6;border:1px solid rgba(55,140,242,.3)}
+.hero-stats{display:flex;gap:24px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat .label{font-size:10px;color:#6b7a9e;text-transform:uppercase;margin-bottom:2px}
+.hero-stat .val{font-size:22px;font-weight:700}
+.hero-stat .val.red{color:#ef4444}
+.hero-stat .val.grn{color:#22c55e}
+.hero-stat .sub{font-size:10px;color:#ef4444;margin-top:2px}
+
+/* ── SECTION GRID ── */
+.master-layout{display:grid;grid-template-columns:2fr 1fr;gap:12px;align-items:start}
+.charts-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.summary-col{position:sticky;top:56px}
+.row{display:grid;gap:12px}
+.row-2{grid-template-columns:1fr 1fr}
+.row-1{grid-template-columns:1fr}
+
+/* ── CARD ── */
+.card{background:#0e0f18;border:1px solid #1e2035;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.card-hd{padding:10px 14px;border-bottom:1px solid #1e2035;font-size:13px;font-weight:600;background:linear-gradient(90deg,#141628,#1a1d38);display:flex;align-items:center;justify-content:space-between}
+.card-hd .tag{font-size:9px;padding:2px 8px;border-radius:3px}
+.card-bd{padding:14px;flex:1;position:relative}
+
+/* ── CHART CANVAS ── */
+canvas.chart{width:100%;height:180px;display:block}
+
+/* ── KPI SUMMARY RIGHT PANEL ── */
+.kpi-panel{background:#0e0f18;border:1px solid #1e2035;border-radius:10px;overflow:hidden}
+.kpi-panel .card-hd{font-size:14px}
+.kpi-panel-bd{padding:16px}
+.kp-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(220,38,38,.15);color:#ef4444;border:1px solid rgba(220,38,38,.3);margin-bottom:8px}
+.kp-big-val{font-size:36px;font-weight:700;color:#ef4444;line-height:1.1;margin-bottom:6px}
+.kp-meta{display:flex;gap:6px;font-size:11px;color:#6b7a9e;margin-bottom:14px;flex-wrap:wrap}
+.kp-meta span{color:#b1bcd8}
+.kp-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.kp-stat{background:#121425;border:1px solid #1e2035;border-radius:8px;padding:10px 12px}
+.kp-stat .kps-val{font-size:18px;font-weight:700;margin-bottom:2px}
+.kp-stat .kps-val.red{color:#ef4444}.kp-stat .kps-val.grn{color:#22c55e}
+.kp-stat .kps-lbl{font-size:10px;color:#6b7a9e}
+.kp-divider{border:none;border-top:1px solid #1e2035;margin:14px 0}
+.kp-actions-title{font-size:14px;font-weight:600;color:#f97316;margin-top:16px;margin-bottom:8px}
+
+/* ── KPI SUMMARY ITEMS (reused) ── */
+.kpi-sum{display:flex;flex-direction:column;gap:8px}
+.kpi-sum-item{display:flex;gap:8px;align-items:flex-start}
+.kpi-sum-tag{font-size:9px;font-weight:700;text-transform:uppercase;padding:3px 8px;border-radius:4px;white-space:nowrap;min-width:52px;text-align:center}
+.tag-what{background:rgba(55,140,242,.15);color:#3b82f6}
+.tag-trend{background:rgba(34,211,238,.15);color:#22d3ee}
+.tag-drivers{background:rgba(139,92,246,.15);color:#a78bfa}
+.tag-impact{background:rgba(249,115,22,.15);color:#f97316}
+.kpi-sum-text{font-size:11px;color:#b1bcd8;line-height:1.5}
+
+/* ── DONUT / LIST ── */
+.cat-list{display:flex;flex-direction:column;gap:6px}
+.cat-item{display:flex;align-items:center;gap:8px;font-size:11px}
+.cat-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.cat-name{flex:1;color:#b1bcd8}
+.cat-val{color:#6b7a9e;font-size:10px}
+
+/* ── HORIZONTAL BAR ── */
+.hbar{margin-bottom:6px}
+.hbar-label{font-size:10px;color:#b1bcd8;margin-bottom:3px;display:flex;justify-content:space-between}
+.hbar-track{height:14px;background:#1a1d35;border-radius:3px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:3px}
+
+/* ── WATERFALL ── */
+.wf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.wf-label{width:50px;font-size:10px;color:#6b7a9e;text-align:right}
+.wf-bar-wrap{flex:1;height:20px;position:relative}
+.wf-bar{height:100%;border-radius:3px;position:absolute}
+
+/* ── SUB KPI TABLE ── */
+.sub-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.sub-tbl th{text-align:left;padding:8px;color:#6b7a9e;font-weight:600;border-bottom:1px solid #1e2035;font-size:10px}
+.sub-tbl td{padding:8px;border-bottom:1px solid rgba(30,32,53,.5);vertical-align:middle}
+.sub-tbl tr:hover{background:rgba(55,140,242,.03)}
+.rag{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600}
+.rag-warn{background:rgba(220,168,55,.12);color:#dca837;border:1px solid rgba(220,168,55,.3)}
+.rag-ok{background:rgba(15,174,2,.12);color:#4ade80;border:1px solid rgba(15,174,2,.3)}
+
+/* ── ACTIONS ── */
+.actions-list{display:flex;flex-direction:column;gap:8px}
+.action-item{display:flex;gap:10px;font-size:12px;color:#b1bcd8;line-height:1.5;background:#121425;border:1px solid #1e2035;border-radius:8px;padding:10px 14px}
+.action-num{width:22px;height:22px;background:rgba(55,140,242,.15);color:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+
+/* ── CHART LEGENDS & ICONS ── */
+.chart-leg{display:flex;justify-content:center;gap:16px;margin-top:8px}
+.cl-i{display:flex;align-items:center;gap:5px;font-size:11px;color:#9ca3af}
+.cl-d{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.c-icons2{display:flex;gap:5px}
+.cbtn{background:rgba(55,140,242,.1);border:1px solid rgba(55,140,242,.25);border-radius:4px;color:#3b82f6;width:24px;height:24px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.cbtn:hover{background:rgba(55,140,242,.2)}
+
+/* ── RESPONSIVE ── */
+body{min-height:100vh}
+.main{width:100%;max-width:1440px;margin:0 auto}
+.topbar{min-height:44px;padding:10px 20px;gap:12px;flex-wrap:wrap}
+.left,.right{flex-wrap:wrap}
+.pill{white-space:nowrap}
+.bottomBar{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 0}
+.back{position:static;right:auto;margin-right:0}
+.tabs{flex-wrap:wrap;justify-content:flex-start}
+.tab{white-space:nowrap}
+.master-layout{grid-template-columns:minmax(0,1.7fr) minmax(300px,0.8fr)}
+.charts-col,.summary-col,.card{min-width:0}
+.card-bd{min-width:0;overflow:hidden}
+.chart{width:100%;max-width:100%;height:180px;display:block}
+.donut-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.donut-wrap canvas{flex-shrink:0;margin:0 auto}
+.sub-tbl-wrap{overflow-x:auto}
+.sub-tbl{min-width:720px}
+.kpi-panel-bd{overflow-x:auto}
+
+@media(max-width:1200px){.master-layout{grid-template-columns:2fr 2fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}}
+@media(max-width:768px){.main{padding:12px}.topbar{padding:55px 12px;flex-wrap:nowrap;gap:7px;}.right{justify-content:flex-start}.pill{font-size:11px;padding:4px 10px;height:auto}.bottomBar{padding:6px 0}.tabs{width:100%}.tab{padding:6px 10px;font-size:10px}.hero{flex-direction:column;align-items:flex-start}.card-hd{font-size:12px;gap:8px;flex-wrap:wrap}.card-bd{padding:12px}.hero-title{font-size:18px}.hero-stat .val{font-size:18px}.kp-big-val{font-size:24px}.kp-stats{grid-template-columns:1fr 1fr}.donut-wrap{flex-direction:column;align-items:center}.chart-leg{flex-wrap:wrap;gap:8px 12px}}
+@media(max-width:480px){.master-layout{grid-template-columns:1fr}.main{padding:8px}.topbar{padding:55px 12px;flex-wrap:nowrap;gap:7px;}.left,.right{width:100%}.left{flex-wrap:wrap}.right{gap:8px}.tab{width:100%;justify-content:center;text-align:center}.kp-stats{grid-template-columns:1fr}.sub-tbl{min-width:680px}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+        <div class="left">
+          <i class="fa-solid fa-house"></i>
+
+          <a href="#">Paelon Hospital</a>
+
+          <span>›</span>
+
+          <span>Business Health</span>
+        </div>
+
+        <div class="right">
+          <div class="pill">
+            USD
+            <i class="fa-solid fa-angle-down"></i>
+          </div>
+
+          <div class="pill tv-toggle" role="button" tabindex="0" aria-pressed="false">
+            TV Mode
+
+            <div class="tv-sw"></div>
+          </div>
+
+          <div class="pill">
+            <div class="greenDot"></div>
+
+            Last synced :
+
+            <b>Apr 1, 2026 12:00 AM</b>
+          </div>
+
+          <div class="pill">
+            <i class="fa-regular fa-calendar"></i>
+
+            Last 3 months
+          </div>
+
+          <div class="pill">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </div>
+        </div>
+</header>
+
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="bottomBar">
+
+<div class="back">
+
+<i class="fa-solid fa-arrow-left"></i>
+
+Back
+
+</div>
+
+<div class="tabs" role="tablist" aria-label="KPI tabs">
+
+<div class="tab active" role="tab" tabindex="0" data-tab="Net Profit">
+Net Profit
+</div>
+
+<div class="tab" role="tab" tabindex="0" data-tab="Operating Margin">
+Operating Margin
+</div>
+
+<div class="tab" role="tab" tabindex="0" data-tab="Total Operating Expense">
+Total Operating Expense
+</div>
+
+<div class="tab" role="tab" tabindex="0" data-tab="Cash Burn Rate">
+Cash Burn Rate
+</div>
+
+</div>
+
+</div>
+  </div>
+
+  <!-- ═══ MASTER LAYOUT: 2/3 Charts + 1/3 KPI Summary ═══ -->
+  <div class="master-layout">
+
+    <!-- LEFT: Charts -->
+    <div class="charts-col">
+
+      <!-- Row: Trend + Revenue vs Expenses -->
+      <div class="row row-2">
+        <div class="card">
+          <div class="card-hd">Net Profit Trend</div>
+          <div class="card-bd"><canvas class="chart" id="trendChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-hd">Revenue vs Expenses</div>
+          <div class="card-bd"><canvas class="chart" id="revExpChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Row: Profit by Department + Profit by Category -->
+  <div class="row row-2">
+    <div class="card">
+      <div class="card-hd">Profit by Department</div>
+      <div class="card-bd">
+        <div class="hbar"><div class="hbar-label"><span>Asset in Transit</span><span>39% (140.3M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:78%;background:linear-gradient(90deg,#3b82f6,#1d4ed8)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>WIP</span><span>22% (78.5M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:44%;background:linear-gradient(90deg,#6366f1,#4338ca)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>Department Labs</span><span>39% (140.3M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:78%;background:linear-gradient(90deg,#22c55e,#15803d)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>Drugs</span><span>22% (78.5M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:44%;background:linear-gradient(90deg,#f97316,#c2410c)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>Consumables</span><span>39% (140.3M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:78%;background:linear-gradient(90deg,#eab308,#a16207)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>Vaccine</span><span>39% (140.3M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:78%;background:linear-gradient(90deg,#14b8a6,#0d7377)"></div></div></div>
+        <div class="hbar"><div class="hbar-label"><span>Cleaning services</span><span>39% (140.3M)</span></div><div class="hbar-track"><div class="hbar-fill" style="width:78%;background:linear-gradient(90deg,#ec4899,#be185d)"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Profit by Category</div>
+      <div class="card-bd">
+        <div class="donut-wrap">
+          <canvas id="donutChart" width="160" height="160" style="flex-shrink:0"></canvas>
+          <div class="cat-list" style="flex:1">
+            <div class="cat-item"><div class="cat-dot" style="background:#3b82f6"></div><span class="cat-name">Asset in Transit</span><span class="cat-val">39% (140.3M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#6366f1"></div><span class="cat-name">WIP</span><span class="cat-val">22% (78.5M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#22c55e"></div><span class="cat-name">Labs</span><span class="cat-val">39% (140.3M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#f97316"></div><span class="cat-name">Drugs</span><span class="cat-val">22% (78.5M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#eab308"></div><span class="cat-name">Consumables</span><span class="cat-val">39% (140.3M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#14b8a6"></div><span class="cat-name">Intercompany</span><span class="cat-val">22% (78.5M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#ec4899"></div><span class="cat-name">Vaccine</span><span class="cat-val">39% (140.3M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#8b5cf6"></div><span class="cat-name">Laboratory cost</span><span class="cat-val">22% (78.5M)</span></div>
+            <div class="cat-item"><div class="cat-dot" style="background:#06b6d4"></div><span class="cat-name">Gas</span><span class="cat-val">22% (78.5M)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: P&L Waterfall + Profit per 100 Revenue -->
+  <div class="row row-2">
+    <div class="card">
+      <div class="card-hd">P&amp;L Waterfall</div>
+      <div class="card-bd"><canvas class="chart" id="waterfallChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Profit per 100 Revenue</div>
+      <div class="card-bd"><canvas class="chart" id="profitPerChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ROW 4: My Dept Profit Trend + Cost Category Split -->
+  <div class="row row-2">
+    <div class="card">
+      <div class="card-hd">My Dept Profit Trend</div>
+      <div class="card-bd"><canvas class="chart" id="deptTrendChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Dept Cost Category Split</div>
+      <div class="card-bd">
+        <div class="cat-list">
+          <div class="cat-item"><div class="cat-dot" style="background:#3b82f6"></div><span class="cat-name">Asset in Transit</span><span class="cat-val">39% (140.3M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#6366f1"></div><span class="cat-name">WIP</span><span class="cat-val">22% (78.5M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#22c55e"></div><span class="cat-name">Labs</span><span class="cat-val">39% (140.3M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#f97316"></div><span class="cat-name">Drugs</span><span class="cat-val">22% (78.5M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#eab308"></div><span class="cat-name">Consumables</span><span class="cat-val">39% (140.3M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#14b8a6"></div><span class="cat-name">Intercompany</span><span class="cat-val">22% (78.5M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#ec4899"></div><span class="cat-name">Vaccine</span><span class="cat-val">39% (140.3M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#8b5cf6"></div><span class="cat-name">Laboratory cost</span><span class="cat-val">22% (78.5M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#06b6d4"></div><span class="cat-name">Cleaning services</span><span class="cat-val">39% (140.3M)</span></div>
+          <div class="cat-item"><div class="cat-dot" style="background:#a855f7"></div><span class="cat-name">Gas</span><span class="cat-val">22% (78.5M)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 5: Radar + Box Plot -->
+  <div class="row row-2">
+    <div class="card">
+      <div class="card-hd">P&amp;L Waterfall <div class="c-icons2"><button class="cbtn">📊</button><button class="cbtn">⤢</button></div></div>
+      <div class="card-bd"><canvas class="chart" id="radarChart" style="height:220px"></canvas>
+        <div class="chart-leg"><span class="cl-i"><span class="cl-d" style="background:#7cfc00"></span>Data 1</span><span class="cl-i"><span class="cl-d" style="background:#a78bfa"></span>Data 2</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Profit per 100 Revenue <div class="c-icons2"><button class="cbtn">📊</button><button class="cbtn">⤢</button></div></div>
+      <div class="card-bd"><canvas class="chart" id="boxChart" style="height:220px"></canvas>
+        <div class="chart-leg"><span class="cl-i"><span class="cl-d" style="background:#a78bfa"></span>Total score obtained by learners</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 6: Grouped Horizontal Bars + Horizontal Bars with Target -->
+  <div class="row row-2">
+    <div class="card">
+      <div class="card-hd">My Dept Profit Trend <div class="c-icons2"><button class="cbtn">📊</button><button class="cbtn">⤢</button></div></div>
+      <div class="card-bd"><canvas class="chart" id="groupedBarChart" style="height:220px"></canvas>
+        <div class="chart-leg"><span class="cl-i"><span class="cl-d" style="background:#7cfc00"></span>Data 1</span><span class="cl-i"><span class="cl-d" style="background:#a78bfa"></span>Data 2</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Dept Cost Category Split <div class="c-icons2"><button class="cbtn">📊</button><button class="cbtn">⤢</button></div></div>
+      <div class="card-bd"><canvas class="chart" id="targetBarChart" style="height:220px"></canvas>
+        <div class="chart-leg"><span class="cl-i"><span class="cl-d" style="background:#a78bfa"></span>Data 2</span><span class="cl-i"><span class="cl-d" style="background:#f97316"></span>Target</span></div>
+      </div>
+    </div><!-- /row-2 grouped bars -->
+
+    </div><!-- /charts-col -->
+
+    <!-- RIGHT: Sub KPI Panel -->
+    <div class="summary-col">
+      <div class="kpi-panel">
+        <div class="card-hd">Sub KPI</div>
+        <div class="kpi-panel-bd" style="padding:0">
+          <div class="sub-tbl-wrap">
+          <table class="sub-tbl">
+            <thead><tr><th>#</th><th>Name</th><th>Driver</th><th>Wtg</th><th>Tgt</th><th>Act</th><th>UOM</th><th>Variance</th><th>RAG</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Revenue Growth Rate%</td><td>Top-line momentum</td><td>35%</td><td>5%</td><td>98.5%</td><td>%</td><td style="color:#4ade80">+1869%</td><td><span class="rag rag-warn">Warning</span></td></tr>
+              <tr><td>2</td><td>Profit Margin%</td><td>Profitability Efficiency</td><td>25%</td><td>10%</td><td>37.8%</td><td>%</td><td style="color:#4ade80">+286.7%</td><td><span class="rag rag-ok">On Track</span></td></tr>
+              <tr><td>3</td><td>Net Profit Growth Rate%</td><td>Profit Trajectory</td><td>40%</td><td>10%</td><td>40%</td><td>%</td><td style="color:#4ade80">+34.5</td><td><span class="rag rag-warn">Warning</span></td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /summary-col -->
+
+  </div><!-- /master-layout -->
+
+  <!-- KPI SUMMARY -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-hd">KPI Summary</div>
+    <div class="card-bd">
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px">
+          <span class="kp-badge">Danger</span>
+          <div class="kp-big-val">-207.1M</div>
+          <div class="kp-meta">Target: <span>354M</span> &nbsp;·&nbsp; ↓ <span>185.9% vs prior</span></div>
+          <div class="kp-stats">
+            <div class="kp-stat"><div class="kps-val red">-207.1M</div><div class="kps-lbl">Current</div></div>
+            <div class="kp-stat"><div class="kps-val grn">+241.2M</div><div class="kps-lbl">Prior Period</div></div>
+            <div class="kp-stat"><div class="kps-val">354M</div><div class="kps-lbl">Target</div></div>
+            <div class="kp-stat"><div class="kps-val red">185.9%</div><div class="kps-lbl">Target %</div></div>
+          </div>
+        </div>
+        <div style="flex:2;min-width:300px">
+          <div class="kpi-sum">
+            <div class="kpi-sum-item"><span class="kpi-sum-tag tag-what">What</span><span class="kpi-sum-text">Net Profit is RED at -34,280,888. -111.8% vs prior period, target was 353,619,355.</span></div>
+            <div class="kpi-sum-item"><span class="kpi-sum-tag tag-trend">Trend</span><span class="kpi-sum-text">Declining. Down 93,836,922 vs prior period, below the 3-run average (114,004,058).</span></div>
+            <div class="kpi-sum-item"><span class="kpi-sum-tag tag-drivers">Drivers</span><span class="kpi-sum-text">Dropped sharply in 2026-04: ₦189,288,437 (24% of total variance).</span></div>
+            <div class="kpi-sum-item"><span class="kpi-sum-tag tag-impact">Impact</span><span class="kpi-sum-text">Net Profit exceeds the target, indicating strong financial performance, but the significant increase raises concerns about sustainability amid rising DSO Risk.</span></div>
+          </div>
+          <div class="kp-actions-title">Agent Recommended Actions</div>
+          <div class="actions-list">
+            <div class="action-item"><span class="action-num">1</span><span>Investigate the factors contributing to the spike in DSO Risk in June 2026, focusing on collection processes and patient billing practices.</span></div>
+            <div class="action-item"><span class="action-num">2</span><span>Enhance the Collection Rate % by implementing targeted strategies in June 2026 to maintain the momentum of improved collections.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// Toggle TV button state
+const tvToggle = document.querySelector('.tv-toggle');
+if (tvToggle) {
+  tvToggle.addEventListener('click', function () {
+    const isOn = this.classList.toggle('on');
+    this.setAttribute('aria-pressed', String(isOn));
+  });
+
+  tvToggle.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.click();
+    }
+  });
+}
+
+// Tab switching active state
+const tabs = document.querySelectorAll('.tab');
+if (tabs.length) {
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (item) {
+        item.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+
+    tab.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        this.click();
+      }
+    });
+  });
+}
+
+/* ── Helper: draw a line chart ── */
+function lineChart(id, datasets, labels, opts){
+  var c=document.getElementById(id), ctx=c.getContext('2d');
+  var W=c.width=c.offsetWidth*2, H=c.height=c.offsetHeight*2;
+  ctx.scale(2,2); var w=W/2, h=H/2;
+  var pad={t:20,r:16,b:28,l:44};
+  var gw=w-pad.l-pad.r, gh=h-pad.t-pad.b;
+
+  var allVals=[]; datasets.forEach(function(d){allVals=allVals.concat(d.data)});
+  var mn=opts.min!=null?opts.min:Math.min.apply(null,allVals);
+  var mx=opts.max!=null?opts.max:Math.max.apply(null,allVals);
+  var range=mx-mn||1;
+
+  function x(i){return pad.l+i/(labels.length-1)*gw}
+  function y(v){return pad.t+(1-(v-mn)/range)*gh}
+
+  // Grid lines
+  ctx.strokeStyle='#1e2035'; ctx.lineWidth=.5;
+  for(var i=0;i<=4;i++){
+    var gy=pad.t+i/4*gh;
+    ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();
+    ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='right';
+    var lv=mx-(i/4)*range;
+    ctx.fillText((lv>=1e6?(lv/1e6).toFixed(0)+'M':lv>=1e3?(lv/1e3).toFixed(0)+'K':lv.toFixed(0)),pad.l-4,gy+3);
+  }
+
+  // X labels
+  ctx.textAlign='center'; ctx.fillStyle='#6b7a9e'; ctx.font='9px system-ui';
+  labels.forEach(function(l,i){ctx.fillText(l,x(i),h-pad.b+16)});
+
+  // Target line
+  if(opts.target!=null){
+    ctx.setLineDash([4,3]);ctx.strokeStyle=opts.targetColor||'#ef4444';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad.l,y(opts.target));ctx.lineTo(w-pad.r,y(opts.target));ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=opts.targetColor||'#ef4444';ctx.font='8px system-ui';ctx.textAlign='left';
+    ctx.fillText('Target',w-pad.r+2,y(opts.target)+3);
+  }
+
+  // Lines
+  datasets.forEach(function(ds){
+    ctx.beginPath();ctx.strokeStyle=ds.color;ctx.lineWidth=2;ctx.lineJoin='round';
+    ds.data.forEach(function(v,i){i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v))});
+    ctx.stroke();
+
+    // Area fill
+    if(ds.fill){
+      ctx.beginPath();
+      ds.data.forEach(function(v,i){i===0?ctx.moveTo(x(i),y(v)):ctx.lineTo(x(i),y(v))});
+      ctx.lineTo(x(ds.data.length-1),pad.t+gh);ctx.lineTo(x(0),pad.t+gh);ctx.closePath();
+      ctx.fillStyle=ds.fill;ctx.fill();
+    }
+
+    // Dots
+    ds.data.forEach(function(v,i){
+      ctx.beginPath();ctx.arc(x(i),y(v),3,0,Math.PI*2);ctx.fillStyle=ds.color;ctx.fill();
+      ctx.beginPath();ctx.arc(x(i),y(v),1.5,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();
+    });
+  });
+
+  // Zero line
+  if(mn<0&&mx>0){
+    ctx.strokeStyle='#3a3f60';ctx.lineWidth=.5;
+    ctx.beginPath();ctx.moveTo(pad.l,y(0));ctx.lineTo(w-pad.r,y(0));ctx.stroke();
+  }
+}
+
+/* ── Helper: bar chart ── */
+function barChart(id, data, labels, colors, opts){
+  var c=document.getElementById(id), ctx=c.getContext('2d');
+  var W=c.width=c.offsetWidth*2, H=c.height=c.offsetHeight*2;
+  ctx.scale(2,2); var w=W/2, h=H/2;
+  var pad={t:20,r:16,b:28,l:44};
+  var gw=w-pad.l-pad.r, gh=h-pad.t-pad.b;
+  var mn=opts.min!=null?opts.min:Math.min(0,Math.min.apply(null,data));
+  var mx=opts.max!=null?opts.max:Math.max.apply(null,data);
+  var range=mx-mn||1;
+  var bw=gw/data.length*.6, gap=gw/data.length;
+
+  function y(v){return pad.t+(1-(v-mn)/range)*gh}
+
+  // Grid
+  ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;
+  for(var i=0;i<=4;i++){
+    var gy=pad.t+i/4*gh;
+    ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();
+    ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='right';
+    var lv=mx-i/4*range;
+    ctx.fillText((Math.abs(lv)>=1e6?(lv/1e6).toFixed(0)+'M':lv.toFixed(0)),pad.l-4,gy+3);
+  }
+
+  // Bars
+  data.forEach(function(v,i){
+    var bx=pad.l+i*gap+(gap-bw)/2;
+    var by=y(Math.max(v,0));
+    var bh=Math.abs(y(v)-y(0));
+    if(v<0)by=y(0);
+    var gr=ctx.createLinearGradient(0,by,0,by+bh);
+    gr.addColorStop(0,colors[i%colors.length]);gr.addColorStop(1,'#062449');
+    ctx.fillStyle=gr;
+    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,[3,3,0,0]);ctx.fill();
+
+    ctx.fillStyle='#b1bcd8';ctx.font='8px system-ui';ctx.textAlign='center';
+    ctx.fillText(labels[i],bx+bw/2,h-pad.b+14);
+  });
+
+  // Zero line
+  if(mn<0){ctx.strokeStyle='#6b7a9e';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(pad.l,y(0));ctx.lineTo(w-pad.r,y(0));ctx.stroke()}
+}
+
+/* ── Draw charts ── */
+window.addEventListener('load',function(){
+  // Net Profit Trend
+  lineChart('trendChart',[
+    {data:[-50e6,-80e6,-30e6,-90e6,-207.1e6],color:'#3b82f6',fill:'rgba(59,130,246,.08)'}
+  ],['Apr\'26','May\'26','Jun\'26','Jul\'26','Aug\'26'],{min:-250e6,max:100e6,target:354e6});
+
+  // Revenue vs Expenses
+  lineChart('revExpChart',[
+    {data:[290e6,250e6,217e6,200e6,180e6],color:'#22c55e',fill:'rgba(34,197,94,.06)'},
+    {data:[300e6,320e6,280e6,290e6,350e6],color:'#ef4444',fill:'rgba(239,68,68,.06)'}
+  ],['Apr\'26','May\'26','Jun\'26','Jul\'26','Aug\'26'],{min:100e6,max:400e6,target:354e6,targetColor:'#6b7a9e'});
+
+  // Waterfall
+  barChart('waterfallChart',[60e6,40e6,-69.8e3,-75.5e3],['May\'26','Jun\'26','Revenue','Expense'],['#3b82f6','#3b82f6','#22c55e','#ef4444'],{min:-100e6,max:100e6});
+
+  // Profit per 100
+  lineChart('profitPerChart',[
+    {data:[50,75,60,45,30],color:'#a78bfa',fill:'rgba(167,139,250,.08)'}
+  ],['2020','2021','2022','2023','2024'],{min:0,max:100});
+
+  // Dept trend
+  lineChart('deptTrendChart',[
+    {data:[40e6,60e6,20e6,-40e6,-80e6],color:'#22d3ee',fill:'rgba(34,211,238,.08)'}
+  ],['2020','2021','2022','2023','2024'],{min:-80e6,max:80e6,target:0,targetColor:'#3a3f60'});
+
+  // Donut chart
+  var dc=document.getElementById('donutChart'),dx=dc.getContext('2d');
+  var segs=[{v:39,c:'#3b82f6'},{v:22,c:'#6366f1'},{v:39,c:'#22c55e'},{v:22,c:'#f97316'},{v:39,c:'#eab308'},{v:22,c:'#14b8a6'},{v:39,c:'#ec4899'},{v:22,c:'#8b5cf6'},{v:22,c:'#06b6d4'}];
+  var total=0;segs.forEach(function(s){total+=s.v});
+  var ang=-Math.PI/2;
+  segs.forEach(function(s){
+    var sl=s.v/total*Math.PI*2;
+    dx.beginPath();dx.moveTo(80,80);dx.arc(80,80,70,ang,ang+sl);dx.closePath();
+    dx.fillStyle=s.c;dx.fill();ang+=sl;
+  });
+  dx.beginPath();dx.arc(80,80,40,0,Math.PI*2);dx.fillStyle='#0e0f18';dx.fill();
+
+  /* ═══ RADAR CHART ═══ */
+  (function(){
+    var c=document.getElementById('radarChart'),ctx=c.getContext('2d');
+    var W=c.width=c.offsetWidth*2,H=c.height=c.offsetHeight*2;
+    ctx.scale(2,2);var w=W/2,h=H/2;
+    var cx=w/2,cy=h/2+5,R=Math.min(w,h)/2-30;
+    var labels=['C1','C2','C3','C4','C5','C6'];
+    var n=labels.length;
+    var d1=[55,65,45,30,50,40],d2=[70,80,50,65,75,60];
+    var PI2=Math.PI*2;
+
+    function getP(i,v){var a=-Math.PI/2+i/n*PI2;var r=v/100*R;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}}
+
+    // Grid rings
+    [20,40,60,80,100].forEach(function(lv){
+      ctx.beginPath();
+      for(var i=0;i<=n;i++){var p=getP(i%n,lv);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)}
+      ctx.closePath();ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;ctx.stroke();
+    });
+
+    // Axis lines
+    for(var i=0;i<n;i++){
+      var p=getP(i,100);
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;ctx.stroke();
+      // Labels
+      var lp=getP(i,115);
+      ctx.fillStyle='#6b7a9e';ctx.font='10px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(labels[i],lp.x,lp.y);
+    }
+
+    // Data 1 (green)
+    ctx.beginPath();
+    d1.forEach(function(v,i){var p=getP(i,v);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)});
+    ctx.closePath();ctx.fillStyle='rgba(124,252,0,.1)';ctx.fill();
+    ctx.strokeStyle='#7cfc00';ctx.lineWidth=1.5;ctx.stroke();
+    d1.forEach(function(v,i){var p=getP(i,v);ctx.beginPath();ctx.arc(p.x,p.y,3,0,PI2);ctx.fillStyle='#7cfc00';ctx.fill()});
+
+    // Data 2 (purple)
+    ctx.beginPath();
+    d2.forEach(function(v,i){var p=getP(i,v);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)});
+    ctx.closePath();ctx.fillStyle='rgba(167,139,250,.1)';ctx.fill();
+    ctx.strokeStyle='#a78bfa';ctx.lineWidth=1.5;ctx.stroke();
+    d2.forEach(function(v,i){var p=getP(i,v);ctx.beginPath();ctx.arc(p.x,p.y,3,0,PI2);ctx.fillStyle='#a78bfa';ctx.fill()});
+  })();
+
+  /* ═══ BOX PLOT ═══ */
+  (function(){
+    var c=document.getElementById('boxChart'),ctx=c.getContext('2d');
+    var W=c.width=c.offsetWidth*2,H=c.height=c.offsetHeight*2;
+    ctx.scale(2,2);var w=W/2,h=H/2;
+    var pad={t:16,r:16,b:26,l:40};
+    var gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+    var labels=['2020','2021','2022','2023','2024'];
+    // [min, q1, median, q3, max]
+    var boxes=[[25,42,50,62,75],[40,52,58,72,80],[35,50,60,70,82],[45,55,65,78,95],[30,40,48,60,90]];
+    var mn=0,mx=100;
+
+    function y(v){return pad.t+(1-v/mx)*gh}
+    var bw=gw/labels.length,boxW=bw*.45;
+
+    // Grid
+    [0,25,50,75,100].forEach(function(v){
+      var gy=y(v);
+      ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(pad.l,gy);ctx.lineTo(w-pad.r,gy);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='right';
+      ctx.fillText(v,pad.l-5,gy+3);
+    });
+
+    // Y-axis label
+    ctx.save();ctx.translate(10,h/2);ctx.rotate(-Math.PI/2);
+    ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='center';
+    ctx.fillText('Scores',0,0);ctx.restore();
+
+    boxes.forEach(function(b,i){
+      var bx=pad.l+i*bw+bw/2;
+
+      // Whisker line (min to max)
+      ctx.strokeStyle='#a78bfa';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(bx,y(b[4]));ctx.lineTo(bx,y(b[0]));ctx.stroke();
+
+      // Whisker caps
+      var cw=boxW*.4;
+      ctx.beginPath();ctx.moveTo(bx-cw,y(b[0]));ctx.lineTo(bx+cw,y(b[0]));ctx.stroke();
+      ctx.beginPath();ctx.moveTo(bx-cw,y(b[4]));ctx.lineTo(bx+cw,y(b[4]));ctx.stroke();
+
+      // Box (q1 to q3)
+      var bTop=y(b[3]),bBot=y(b[1]),bH=bBot-bTop;
+      ctx.fillStyle='rgba(167,139,250,.3)';
+      ctx.fillRect(bx-boxW/2,bTop,boxW,bH);
+      ctx.strokeStyle='#a78bfa';ctx.lineWidth=1;
+      ctx.strokeRect(bx-boxW/2,bTop,boxW,bH);
+
+      // Median line
+      ctx.strokeStyle='#7c3aed';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(bx-boxW/2,y(b[2]));ctx.lineTo(bx+boxW/2,y(b[2]));ctx.stroke();
+
+      // X label
+      ctx.fillStyle='#6b7a9e';ctx.font='10px system-ui';ctx.textAlign='center';
+      ctx.fillText(labels[i],bx,h-pad.b+14);
+    });
+  })();
+
+  /* ═══ GROUPED HORIZONTAL BAR ═══ */
+  (function(){
+    var c=document.getElementById('groupedBarChart'),ctx=c.getContext('2d');
+    var W=c.width=c.offsetWidth*2,H=c.height=c.offsetHeight*2;
+    ctx.scale(2,2);var w=W/2,h=H/2;
+    var pad={t:12,r:16,b:26,l:36};
+    var gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+    var cats=['C1','C2','C3','C4','C5'];
+    var d1=[20,50,25,65,55],d2=[30,60,30,75,65];
+    var mx=100;
+    var rowH=gh/cats.length,barH=rowH*.3,gap=rowH*.1;
+
+    function x(v){return pad.l+v/mx*gw}
+
+    // Grid
+    [0,20,40,60,80,100].forEach(function(v){
+      var gx=x(v);
+      ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;
+      ctx.beginPath();ctx.moveTo(gx,pad.t);ctx.lineTo(gx,pad.t+gh);ctx.stroke();
+      ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='center';
+      ctx.fillText(v,gx,h-pad.b+14);
+    });
+
+    // Y-axis label
+    ctx.save();ctx.translate(10,h/2);ctx.rotate(-Math.PI/2);
+    ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='center';
+    ctx.fillText('Categories',0,0);ctx.restore();
+
+    cats.forEach(function(cat,i){
+      var rowY=pad.t+i*rowH;
+      var y1=rowY+rowH/2-barH-gap/2;
+      var y2=rowY+rowH/2+gap/2;
+
+      // Data 2 (purple)
+      var w2=d2[i]/mx*gw;
+      ctx.fillStyle='#a78bfa';
+      ctx.beginPath();ctx.roundRect(pad.l,y1,w2,barH,[0,3,3,0]);ctx.fill();
+
+      // Data 1 (green)
+      var w1=d1[i]/mx*gw;
+      ctx.fillStyle='#7cfc00';
+      ctx.beginPath();ctx.roundRect(pad.l,y2,w1,barH,[0,3,3,0]);ctx.fill();
+
+      // Category label
+      ctx.fillStyle='#6b7a9e';ctx.font='10px system-ui';ctx.textAlign='right';
+      ctx.fillText(cat,pad.l-6,rowY+rowH/2+3);
+    });
+  })();
+
+  /* ═══ HORIZONTAL BAR WITH TARGET LINE ═══ */
+  (function(){
+    var c=document.getElementById('targetBarChart'),ctx=c.getContext('2d');
+    var W=c.width=c.offsetWidth*2,H=c.height=c.offsetHeight*2;
+    ctx.scale(2,2);var w=W/2,h=H/2;
+    var pad={t:12,r:16,b:26,l:36};
+    var gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+    var cats=['C1','C2','C3','C4','C5'];
+    var data=[15,20,45,90,60];
+    var target=80;
+    var mx=100;
+    var rowH=gh/cats.length,barH=rowH*.5;
+
+    function x(v){return pad.l+v/mx*gw}
+
+    // Grid
+    [0,20,40,60,80,100].forEach(function(v){
+      var gx=x(v);
+      ctx.strokeStyle='#1e2035';ctx.lineWidth=.5;
+      ctx.beginPath();ctx.moveTo(gx,pad.t);ctx.lineTo(gx,pad.t+gh);ctx.stroke();
+      ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='center';
+      ctx.fillText(v,gx,h-pad.b+14);
+    });
+
+    // Y-axis label
+    ctx.save();ctx.translate(10,h/2);ctx.rotate(-Math.PI/2);
+    ctx.fillStyle='#6b7a9e';ctx.font='9px system-ui';ctx.textAlign='center';
+    ctx.fillText('Categories',0,0);ctx.restore();
+
+    // Bars
+    cats.forEach(function(cat,i){
+      var rowY=pad.t+i*rowH;
+      var by=rowY+(rowH-barH)/2;
+      var bw=data[i]/mx*gw;
+
+      ctx.fillStyle='#a78bfa';
+      ctx.beginPath();ctx.roundRect(pad.l,by,bw,barH,[0,4,4,0]);ctx.fill();
+
+      ctx.fillStyle='#6b7a9e';ctx.font='10px system-ui';ctx.textAlign='right';
+      ctx.fillText(cat,pad.l-6,rowY+rowH/2+3);
+    });
+
+    // Target line (red dashed)
+    var tx=x(target);
+    ctx.setLineDash([5,4]);ctx.strokeStyle='#f97316';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(tx,pad.t);ctx.lineTo(tx,pad.t+gh);ctx.stroke();
+    ctx.setLineDash([]);
+  })();
+});
+</script>
+</body>
+</html>
