@@ -1,1 +1,1989 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Decision Intelligence Centre – Paelon Hospital</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: #0b0c14;
+        color: #fff;
+        font-family: "DM Sans", system-ui, sans-serif;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
 
+      /* ═══ TOPBAR ═══ */
+      .topbar {
+        height: 44px;
+        background: #0e0f18;
+        border-bottom: 1px solid #1e2035;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .tb-l {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+      .tb-l .sep {
+        color: #555;
+      }
+      .tb-r {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .pill {
+        background: #13141e;
+        border: 1px solid #252840;
+        border-radius: 20px;
+        padding: 5px 14px;
+        color: #8a9bc2;
+        font-size: 13px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: inherit;
+      }
+      .tv {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        color: #8a9bc2;
+        cursor: pointer;
+      }
+      .tv-sw {
+        width: 34px;
+        height: 19px;
+        background: #252840;
+        border-radius: 10px;
+        position: relative;
+      }
+      .tv-sw::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 15px;
+        height: 15px;
+        background: #555;
+        border-radius: 50%;
+      }
+      .sync {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(16, 217, 5, 0.07);
+        border: 1px solid rgba(16, 217, 5, 0.18);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 11px;
+      }
+      .sync-d {
+        width: 7px;
+        height: 7px;
+        background: #10d905;
+        border-radius: 50%;
+      }
+      .sync .l {
+        color: #6b7a9e;
+      }
+      .sync .b {
+        font-weight: 600;
+      }
+      .btn-per {
+        background: linear-gradient(135deg, #1a3568, #0f2244);
+        border: 1px solid #264a80;
+        border-radius: 20px;
+        padding: 5px 16px;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .more {
+        background: none;
+        border: none;
+        color: #6b7a9e;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0 4px;
+      }
+
+      /* ═══ MAIN ═══ */
+      .main {
+        padding: 20px 24px;
+      }
+
+      /* ═══ PAGE HEADER ═══ */
+      .pg-hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 16px;
+      }
+      .pg-hd h1 {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .pg-hd .run {
+        font-size: 11px;
+        color: #6b7a9e;
+      }
+
+      /* ═══ STAT CARDS ═══ */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .stat {
+        border-radius: 10px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid transparent;
+      }
+      .stat-ico {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+      .stat-lbl {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .stat-val {
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .s-total {
+        background: linear-gradient(135deg, #0f1a3a, #162050);
+        border-color: #1e3060;
+      }
+      .s-total .stat-ico {
+        background: rgba(55, 140, 242, 0.15);
+        color: #3b82f6;
+      }
+      .s-crit {
+        background: linear-gradient(135deg, #2a1010, #3a1515);
+        border-color: #4a2020;
+      }
+      .s-crit .stat-ico {
+        background: rgba(220, 0, 0, 0.15);
+        color: #ef4444;
+      }
+      .s-crit .stat-val {
+        color: #ff6b6b;
+      }
+      .s-warn {
+        background: linear-gradient(135deg, #2a2210, #3a2e15);
+        border-color: #4a3a20;
+      }
+      .s-warn .stat-ico {
+        background: rgba(220, 168, 55, 0.15);
+        color: #dca837;
+      }
+      .s-warn .stat-val {
+        color: #dca837;
+      }
+      .s-ok {
+        background: linear-gradient(135deg, #0a2a10, #103a15);
+        border-color: #1a4a20;
+      }
+      .s-ok .stat-ico {
+        background: rgba(15, 174, 2, 0.15);
+        color: #22c55e;
+      }
+      .s-ok .stat-val {
+        color: #4ade80;
+      }
+      .s-pend {
+        background: linear-gradient(135deg, #101a2a, #152a3a);
+        border-color: #1a3a50;
+      }
+      .s-pend .stat-ico {
+        background: rgba(34, 211, 238, 0.15);
+        color: #22d3ee;
+      }
+      .s-pend .stat-val {
+        color: #22d3ee;
+      }
+
+      /* ═══ CONTROLS ═══ */
+      .ctrl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .tabs {
+        display: flex;
+        gap: 4px;
+      }
+      .tab {
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 6px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: #8a9bc2;
+        cursor: pointer;
+        font-family: inherit;
+        transition: 0.15s;
+      }
+      .tab.active {
+        background: #0b0c14;
+        border-color: #3b82f6;
+        color: #fff;
+      }
+      .tab .bdg {
+        background: #ef4444;
+        color: #fff;
+        font-size: 9px;
+        border-radius: 50%;
+        padding: 1px 5px;
+        margin-left: 6px;
+        font-weight: 700;
+      }
+      .filters {
+        display: flex;
+        gap: 4px;
+      }
+      .fbtn {
+        border: 1px solid;
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 11px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 500;
+        background: transparent;
+      }
+      .fb-mon {
+        color: #3b82f6;
+        border-color: rgba(55, 140, 242, 0.3);
+        background: rgba(55, 140, 242, 0.08);
+      }
+      .fb-ano {
+        color: #dca837;
+        border-color: rgba(220, 168, 55, 0.3);
+        background: rgba(220, 168, 55, 0.08);
+      }
+      .fb-rca {
+        color: #a78bfa;
+        border-color: rgba(139, 92, 246, 0.3);
+        background: rgba(139, 92, 246, 0.08);
+      }
+
+      /* ═══ KPI TABLE ═══ */
+      .tbl {
+        width: 100%;
+        border: 1px solid #1e2035;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #0e0f18;
+      }
+      .tbl-hd {
+        display: grid;
+        grid-template-columns: 1.6fr 1.1fr 0.85fr 0.85fr 0.65fr 0.7fr 0.9fr 1.8fr 36px;
+        padding: 10px 16px;
+        background: linear-gradient(90deg, #141628, #1a1d38);
+        border-bottom: 1px solid #1e2035;
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7a9e;
+        align-items: center;
+      }
+      .krow {
+        border-bottom: 1px solid #1e2035;
+      }
+      .krow:last-child {
+        border-bottom: none;
+      }
+      .krow-main {
+        display: grid;
+        grid-template-columns: 1.6fr 1.1fr 0.85fr 0.85fr 0.65fr 0.7fr 0.9fr 1.8fr 36px;
+        padding: 12px 16px;
+        align-items: center;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background 0.15s;
+      }
+      .krow-main:hover {
+        background: rgba(55, 140, 242, 0.03);
+      }
+
+      /* KPI name */
+      .kn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .kd {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .kd.g {
+        background: #22c55e;
+      }
+      .kd.r {
+        background: #ef4444;
+      }
+      .kd.a {
+        background: #dca837;
+      }
+      .klink {
+        color: #3b82f6;
+        font-weight: 500;
+        text-decoration: none;
+        font-size: 12px;
+      }
+      .klink:hover {
+        text-decoration: underline;
+      }
+
+      /* Agent badges */
+      .ags {
+        display: flex;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .ag {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 9px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .ag-a {
+        background: rgba(220, 168, 55, 0.12);
+        color: #dca837;
+        border: 1px solid rgba(220, 168, 55, 0.25);
+      }
+      .ag-m {
+        background: rgba(55, 140, 242, 0.12);
+        color: #3b82f6;
+        border: 1px solid rgba(55, 140, 242, 0.25);
+      }
+      .ag-r {
+        background: rgba(139, 92, 246, 0.12);
+        color: #a78bfa;
+        border: 1px solid rgba(139, 92, 246, 0.25);
+      }
+
+      /* Values */
+      .vr {
+        color: #ff6b6b;
+      }
+      .vg {
+        color: #4ade80;
+      }
+
+      /* Severity */
+      .sev {
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 10px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .sev-w {
+        background: rgba(220, 168, 55, 0.12);
+        color: #dca837;
+        border: 1px solid rgba(220, 168, 55, 0.3);
+      }
+      .sev-c {
+        background: rgba(220, 0, 0, 0.12);
+        color: #ff6b6b;
+        border: 1px solid rgba(220, 0, 0, 0.3);
+      }
+      .sev-o {
+        background: rgba(15, 174, 2, 0.12);
+        color: #4ade80;
+        border: 1px solid rgba(15, 174, 2, 0.3);
+      }
+
+      /* Trend */
+      .trend {
+        font-size: 11px;
+        color: #6b7a9e;
+      }
+      .trend::before {
+        content: "→ ";
+        color: #6b7a9e;
+      }
+
+      /* Key driver */
+      .kdr {
+        font-size: 10px;
+        color: #8a9bc2;
+        line-height: 1.4;
+      }
+
+      /* Chevron */
+      .chv {
+        width: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7a9e;
+        font-size: 12px;
+        transition: transform 0.25s;
+      }
+      .krow.open .chv {
+        transform: rotate(180deg);
+        color: #3b82f6;
+      }
+
+      /* ═══ EXPANDABLE DETAIL ═══ */
+      .kdet {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        background: #080910;
+        border-top: 1px solid #1e2035;
+      }
+      .krow.open .kdet {
+        max-height: 800px;
+      }
+      .kdet-in {
+        padding: 14px 16px;
+      }
+
+      /* Detail tabs */
+      .dtabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid #1e2035;
+        margin-bottom: 14px;
+      }
+      .dtab {
+        padding: 8px 18px;
+        font-size: 12px;
+        color: #6b7a9e;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        font-family: inherit;
+        background: none;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        transition: 0.15s;
+      }
+      .dtab.active {
+        color: #fff;
+        border-bottom-color: #3b82f6;
+      }
+      .dtab:hover {
+        color: #b1bcd8;
+      }
+      .dpane {
+        display: none;
+      }
+      .dpane.active {
+        display: block;
+      }
+
+      /* ═══ SUMMARY TAB ═══ */
+      .sum-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .sum-left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .si {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+      .si-tag {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        white-space: nowrap;
+        min-width: 54px;
+        text-align: center;
+      }
+      .t-what {
+        background: rgba(55, 140, 242, 0.12);
+        color: #3b82f6;
+      }
+      .t-trend {
+        background: rgba(34, 211, 238, 0.12);
+        color: #22d3ee;
+      }
+      .t-drv {
+        background: rgba(139, 92, 246, 0.12);
+        color: #a78bfa;
+      }
+      .t-imp {
+        background: rgba(249, 115, 22, 0.12);
+        color: #f97316;
+      }
+      .t-act {
+        background: rgba(220, 0, 0, 0.12);
+        color: #ff6b6b;
+      }
+      .si-txt {
+        font-size: 11px;
+        color: #b1bcd8;
+        line-height: 1.55;
+      }
+
+      .sum-right {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .sc {
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .sc h4 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .sc p,
+      .sc li {
+        font-size: 11px;
+        color: #8a9bc2;
+        line-height: 1.55;
+      }
+      .sc ul {
+        padding-left: 14px;
+      }
+      .sc li {
+        margin-bottom: 3px;
+      }
+
+      /* ═══ FISHBONE TAB ═══ */
+      .fish-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .lk-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .lk-tbl {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+      .lk-tbl th {
+        text-align: left;
+        padding: 7px 8px;
+        color: #6b7a9e;
+        font-weight: 600;
+        border-bottom: 1px solid #1e2035;
+        font-size: 10px;
+      }
+      .lk-tbl td {
+        padding: 7px 8px;
+        border-bottom: 1px solid rgba(30, 32, 53, 0.4);
+      }
+      .lk-tbl .kd {
+        display: inline-block;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .vpos {
+        color: #4ade80;
+        font-weight: 600;
+      }
+      .uom {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        font-weight: 700;
+        background: rgba(55, 140, 242, 0.15);
+        color: #3b82f6;
+      }
+      .leg {
+        display: flex;
+        gap: 14px;
+        margin-top: 10px;
+        font-size: 10px;
+        color: #6b7a9e;
+      }
+      .leg .ld {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 4px;
+      }
+      .ld.h {
+        background: #ef4444;
+      }
+      .ld.m {
+        background: #dca837;
+      }
+      .ld.lo {
+        background: #22c55e;
+      }
+
+      .fish-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .fish-wrap {
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 10px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 240px;
+      }
+      .fish-svg {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+      }
+      .tv.on .tv-sw {
+        background: #0fae02;
+      }
+      .tv.on .tv-sw::after {
+        left: 17px;
+        background: #fff;
+      }
+
+      /* ═══ RESPONSIVE ═══ */
+      @media (max-width: 1100px) {
+        .tbl-hd,
+        .krow-main {
+          grid-template-columns: 1.4fr 1fr 0.8fr 0.8fr 0.6fr 0.65fr 0.85fr 1.5fr 30px;
+          font-size: 10px;
+        }
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .sum-grid,
+        .fish-grid {
+          grid-template-columns: 1fr;
+        }
+        .sum-right {
+          grid-template-columns: 1fr 1fr;
+        }
+        .tbl-hd {
+          display: none;
+        }
+        .krow-main {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 10px 14px;
+          position: relative;
+        }
+        .krow-main > *:not(.kn):not(.chv)::before {
+          content: attr(data-l);
+          display: block;
+          font-size: 9px;
+          color: #6b7a9e;
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+        .chv {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+        }
+        .sync,
+        .tv {
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        :root {
+          font-size: 15px;
+        }
+        .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+        .main {
+          padding: 12px;
+        }
+        .sum-right {
+          grid-template-columns: 1fr;
+        }
+        .ctrl {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .tb-r .sync,
+        .tb-r .tv,
+        .tb-r .btn-per {
+          display: none;
+        }
+      }
+      @media (max-width: 420px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ TOPBAR ═══ -->
+    <header class="topbar">
+      <div class="tb-l">
+        <span>🏠</span><span class="sep">›</span><span>Paelon Hospital</span>
+      </div>
+      <div class="tb-r">
+        <button class="pill">USD <span style="font-size: 9px">▾</span></button>
+        <div class="tv" id="tv">
+          <span>TV Mode</span>
+          <div class="tv-sw"></div>
+        </div>
+        <div class="sync">
+          <span class="sync-d"></span><span class="l">Last synced :</span
+          ><span class="b">Jun 22, 2026 1:05 PM</span>
+        </div>
+        <button class="btn-per">📅 Last 3 months</button>
+        <button class="more">⋮</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- ═══ PAGE HEADER ═══ -->
+      <div class="pg-hd">
+        <h1>Decision Intelligence Centre</h1>
+        <span class="run">Run #990 · Jun 28, 2026 11:38 AM</span>
+      </div>
+
+      <!-- ═══ STAT CARDS ═══ -->
+      <div class="stats">
+        <div class="stat s-total">
+          <div class="stat-ico">📊</div>
+          <div>
+            <div class="stat-lbl">Total KPIs</div>
+            <div class="stat-val">14</div>
+          </div>
+        </div>
+        <div class="stat s-crit">
+          <div class="stat-ico">⚠</div>
+          <div>
+            <div class="stat-lbl">Critical</div>
+            <div class="stat-val">7</div>
+          </div>
+        </div>
+        <div class="stat s-warn">
+          <div class="stat-ico">🔔</div>
+          <div>
+            <div class="stat-lbl">Warning</div>
+            <div class="stat-val">1</div>
+          </div>
+        </div>
+        <div class="stat s-ok">
+          <div class="stat-ico">✔</div>
+          <div>
+            <div class="stat-lbl">On Track</div>
+            <div class="stat-val">6</div>
+          </div>
+        </div>
+        <div class="stat s-pend">
+          <div class="stat-ico">⏱</div>
+          <div>
+            <div class="stat-lbl">Actions pending</div>
+            <div class="stat-val">8</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ CONTROLS ═══ -->
+      <div class="ctrl">
+        <div class="tabs">
+          <button class="tab active">All KPIs</button>
+          <button class="tab">Action centre <span class="bdg">4</span></button>
+        </div>
+        <div class="filters">
+          <button class="fbtn fb-mon">Monitor</button>
+          <button class="fbtn fb-ano">Anomaly</button>
+          <button class="fbtn fb-rca">RCA</button>
+        </div>
+      </div>
+
+      <!-- ═══ KPI TABLE ═══ -->
+      <div class="tbl">
+        <div class="tbl-hd">
+          <span>KPI</span><span>Agents</span><span>Actual</span
+          ><span>Target</span><span>Delta</span><span>Severity</span
+          ><span>Previous Trends</span><span>Key Driver</span><span></span>
+        </div>
+
+        <!-- ── ROW 1: Vend.Payment Efficiency ── -->
+        <div class="krow" id="r1">
+          <div class="krow-main" onclick="tog('r1')">
+            <span class="kn"
+              ><span class="kd g"></span
+              ><a class="klink">Vend.Payment Efficiency</a></span
+            >
+            <span class="ags" data-l="Agents"
+              ><span class="ag ag-a">ANO</span><span class="ag ag-m">MON</span
+              ><span class="ag ag-r">RCA</span></span
+            >
+            <span class="vr" data-l="Actual">₦ -374.5M</span>
+            <span data-l="Target">₦ -374.5M</span>
+            <span class="vr" data-l="Delta">₦ -118.5</span>
+            <span data-l="Severity"
+              ><span class="sev sev-w">Warning</span></span
+            >
+            <span class="trend" data-l="Trends">Stable</span>
+            <span class="kdr" data-l="Key Driver"
+              >Dropped Sharply in 2026–Q4: 181,993,735 (20% Of Total
+              Variance).</span
+            >
+            <span class="chv">▾</span>
+          </div>
+          <div class="kdet">
+            <div class="kdet-in">
+              <div class="dtabs" id="dt1">
+                <button class="dtab active" onclick="stab(this, 's1')">
+                  Summary
+                </button>
+                <button class="dtab" onclick="stab(this, 'f1')">
+                  Fishbone
+                </button>
+              </div>
+              <!-- SUMMARY -->
+              <div class="dpane active" id="s1">
+                <div class="sum-grid">
+                  <div class="sum-left">
+                    <div class="si">
+                      <span class="si-tag t-what">What</span
+                      ><span class="si-txt"
+                        >Net Profit is RED at -34,280,888. -111.8% vs prior
+                        period, target was 353,619,355.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-trend">Trend</span
+                      ><span class="si-txt"
+                        >Stable. No change vs prior period, below the 3-run
+                        average ( 69,563,401).</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-drv">Drivers</span
+                      ><span class="si-txt"
+                        >Dropped sharply in 2026–Q4: 181,993,735 (20% of total
+                        variance).</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-imp">Impact</span
+                      ><span class="si-txt"
+                        >Net Profit is substantially below target, indicating
+                        severe financial distress that could jeopardize
+                        operational continuity and long-term viability.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-act">Action</span
+                      ><span class="si-txt"
+                        >Investigate the causes of the DSO Risk spike in June
+                        2026 to identify and rectify billing or cash flow
+                        issues. Review operational costs and revenue streams to
+                        address the Net Profit decline observed in April 2026.
+                        Confidence: Medium</span
+                      >
+                    </div>
+                  </div>
+                  <div class="sum-right">
+                    <div class="sc">
+                      <h4>What Moved</h4>
+                      <p>No significant change from the previous period.</p>
+                    </div>
+                    <div class="sc">
+                      <h4>How Bad</h4>
+                      <ul>
+                        <li>Actual: -34.3M</li>
+                        <li>Target: 353.6M</li>
+                        <li>Gap vs Target: -111.8%</li>
+                      </ul>
+                    </div>
+                    <div class="sc">
+                      <h4>Why It Happened</h4>
+                      <ul>
+                        <li>Controls / Timing / Data Quality: 66.6%</li>
+                        <li>Profit Margin %</li>
+                        <li>Revenue &amp; Margin: 33.3%</li>
+                        <li>Revenue Growth Rate %</li>
+                      </ul>
+                    </div>
+                    <div class="sc">
+                      <h4>Attention Needed</h4>
+                      <ul>
+                        <li>Investigate the DSO Risk spike in June 2026</li>
+                        <li>
+                          Identify the root cause of billing or cash flow
+                          issues.
+                        </li>
+                        <li>
+                          Implement corrective actions to improve collections
+                          and reduce risk.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- FISHBONE -->
+              <div class="dpane" id="f1">
+                <div class="fish-grid">
+                  <div>
+                    <div class="lk-title">Mapped Linked KPIs</div>
+                    <table class="lk-tbl">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                          <th>Driver</th>
+                          <th>Wtg</th>
+                          <th>Tgt</th>
+                          <th>Act</th>
+                          <th>UOM</th>
+                          <th>Variance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><span class="kd g"></span></td>
+                          <td>Revenue Growth Rate%</td>
+                          <td>Top-line momentum</td>
+                          <td>35%</td>
+                          <td>5%</td>
+                          <td>98.5%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+1869.0%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Profit Margin%</td>
+                          <td>Profitability Efficiency</td>
+                          <td>25%</td>
+                          <td>10%</td>
+                          <td>37.8%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+286.7%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Net Profit Growth Rate%</td>
+                          <td>Profit Trajectory</td>
+                          <td>40%</td>
+                          <td>10%</td>
+                          <td>40%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+34.5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="leg">
+                      <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="fish-title">RCA Fishbone</div>
+                    <div class="fish-wrap">
+                      <svg
+                        class="fish-svg"
+                        viewBox="0 0 500 260"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="50"
+                          y1="130"
+                          x2="430"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="450"
+                          cy="130"
+                          r="22"
+                          fill="#1a8c00"
+                          stroke="#30d010"
+                          stroke-width="2"
+                        />
+                        <text
+                          x="450"
+                          y="125"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Net
+                        </text>
+                        <text
+                          x="450"
+                          y="136"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <polygon
+                          points="50,130 20,100 20,160"
+                          fill="#1e2040"
+                          stroke="#2a2d55"
+                          stroke-width="1.5"
+                        />
+                        <line
+                          x1="140"
+                          y1="40"
+                          x2="200"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="280"
+                          y1="40"
+                          x2="340"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="160"
+                          y1="220"
+                          x2="220"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="300"
+                          y1="220"
+                          x2="360"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <rect
+                          x="78"
+                          y="20"
+                          width="128"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="142"
+                          y="37"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="8"
+                          font-family="system-ui"
+                        >
+                          Revenue And Margin
+                        </text>
+                        <rect
+                          x="242"
+                          y="20"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="300"
+                          y="31"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Revenue Growth
+                        </text>
+                        <text
+                          x="300"
+                          y="41"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Rate%
+                        </text>
+                        <rect
+                          x="100"
+                          y="214"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="158"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <text
+                          x="158"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Margin
+                        </text>
+                        <rect
+                          x="238"
+                          y="214"
+                          width="126"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="301"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Net Profit
+                        </text>
+                        <text
+                          x="301"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Growth Rate%
+                        </text>
+                        <text
+                          x="250"
+                          y="255"
+                          text-anchor="middle"
+                          fill="#6b7a9e"
+                          font-size="7"
+                          font-family="system-ui"
+                        >
+                          Controls / Timing / Data Quality
+                        </text>
+                      </svg>
+                    </div>
+                    <div class="leg">
+                      <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ROW 2: Accounts Receivables ── -->
+        <div class="krow" id="r2">
+          <div class="krow-main" onclick="tog('r2')">
+            <span class="kn"
+              ><span class="kd r"></span
+              ><a class="klink">Accounts Receivables</a></span
+            >
+            <span class="ags" data-l="Agents"
+              ><span class="ag ag-a">ANO</span></span
+            >
+            <span class="vr" data-l="Actual">-16.3%</span>
+            <span data-l="Target">-16.3%</span>
+            <span class="vr" data-l="Delta">-112%</span>
+            <span data-l="Severity"
+              ><span class="sev sev-c">Critical</span></span
+            >
+            <span class="trend" data-l="Trends">Stable</span>
+            <span class="kdr" data-l="Key Driver"
+              >Dropped Sharply in 2026–Q4: 181,993,735</span
+            >
+            <span class="chv">▾</span>
+          </div>
+          <div class="kdet">
+            <div class="kdet-in">
+              <div class="dtabs">
+                <button class="dtab active" onclick="stab(this, 's2')">
+                  Summary</button
+                ><button class="dtab" onclick="stab(this, 'f2')">
+                  Fishbone
+                </button>
+              </div>
+              <div class="dpane active" id="s2">
+                <div class="sum-grid">
+                  <div class="sum-left">
+                    <div class="si">
+                      <span class="si-tag t-what">What</span
+                      ><span class="si-txt"
+                        >Accounts Receivable is CRITICAL at -16.3%. Severe
+                        collection issues impacting cash flow.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-trend">Trend</span
+                      ><span class="si-txt"
+                        >Stable. No change vs prior period.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-drv">Drivers</span
+                      ><span class="si-txt"
+                        >Dropped sharply in 2026–Q4: 181,993,735.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-imp">Impact</span
+                      ><span class="si-txt"
+                        >Cash flow severely impacted by uncollected
+                        receivables.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-act">Action</span
+                      ><span class="si-txt"
+                        >Review aging reports. Escalate overdue invoices.
+                        Confidence: High</span
+                      >
+                    </div>
+                  </div>
+                  <div class="sum-right">
+                    <div class="sc">
+                      <h4>What Moved</h4>
+                      <p>AR declined from prior period baseline.</p>
+                    </div>
+                    <div class="sc">
+                      <h4>How Bad</h4>
+                      <ul>
+                        <li>Actual: -16.3%</li>
+                        <li>Target: -16.3%</li>
+                        <li>Delta: -112%</li>
+                      </ul>
+                    </div>
+                    <div class="sc">
+                      <h4>Why It Happened</h4>
+                      <ul>
+                        <li>Payment delays from key accounts</li>
+                        <li>Invoice disputes pending resolution</li>
+                      </ul>
+                    </div>
+                    <div class="sc">
+                      <h4>Attention Needed</h4>
+                      <ul>
+                        <li>Escalate overdue invoices above 60 days</li>
+                        <li>Review collection process efficiency</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dpane" id="f2">
+                <div class="fish-grid">
+                  <div>
+                    <div class="lk-title">Mapped Linked KPIs</div>
+                     <table class="lk-tbl">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                          <th>Driver</th>
+                          <th>Wtg</th>
+                          <th>Tgt</th>
+                          <th>Act</th>
+                          <th>UOM</th>
+                          <th>Variance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><span class="kd g"></span></td>
+                          <td>Revenue Growth Rate%</td>
+                          <td>Top-line momentum</td>
+                          <td>35%</td>
+                          <td>5%</td>
+                          <td>98.5%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+1869.0%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Profit Margin%</td>
+                          <td>Profitability Efficiency</td>
+                          <td>25%</td>
+                          <td>10%</td>
+                          <td>37.8%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+286.7%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Net Profit Growth Rate%</td>
+                          <td>Profit Trajectory</td>
+                          <td>40%</td>
+                          <td>10%</td>
+                          <td>40%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+34.5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="leg">
+                      <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="fish-title">RCA Fishbone</div>
+                    <div class="fish-wrap">
+                      <svg
+                        class="fish-svg"
+                        viewBox="0 0 500 260"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="50"
+                          y1="130"
+                          x2="430"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="450"
+                          cy="130"
+                          r="22"
+                          fill="#1a8c00"
+                          stroke="#30d010"
+                          stroke-width="2"
+                        />
+                        <text
+                          x="450"
+                          y="125"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Net
+                        </text>
+                        <text
+                          x="450"
+                          y="136"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <polygon
+                          points="50,130 20,100 20,160"
+                          fill="#1e2040"
+                          stroke="#2a2d55"
+                          stroke-width="1.5"
+                        />
+                        <line
+                          x1="140"
+                          y1="40"
+                          x2="200"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="280"
+                          y1="40"
+                          x2="340"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="160"
+                          y1="220"
+                          x2="220"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="300"
+                          y1="220"
+                          x2="360"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <rect
+                          x="78"
+                          y="20"
+                          width="128"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="142"
+                          y="37"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="8"
+                          font-family="system-ui"
+                        >
+                          Revenue And Margin
+                        </text>
+                        <rect
+                          x="242"
+                          y="20"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="300"
+                          y="31"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Revenue Growth
+                        </text>
+                        <text
+                          x="300"
+                          y="41"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Rate%
+                        </text>
+                        <rect
+                          x="100"
+                          y="214"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="158"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <text
+                          x="158"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Margin
+                        </text>
+                        <rect
+                          x="238"
+                          y="214"
+                          width="126"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="301"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Net Profit
+                        </text>
+                        <text
+                          x="301"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Growth Rate%
+                        </text>
+                        <text
+                          x="250"
+                          y="255"
+                          text-anchor="middle"
+                          fill="#6b7a9e"
+                          font-size="7"
+                          font-family="system-ui"
+                        >
+                          Controls / Timing / Data Quality
+                        </text>
+                      </svg>
+                    </div>
+                    <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ROW 3: Total Operating Expenses ── -->
+        <div class="krow" id="r3">
+          <div class="krow-main" onclick="tog('r3')">
+            <span class="kn"
+              ><span class="kd g"></span
+              ><a class="klink">Total Operating Expenses</a></span
+            >
+            <span class="ags" data-l="Agents"
+              ><span class="ag ag-a">ANO</span
+              ><span class="ag ag-m">MON</span></span
+            >
+            <span class="vg" data-l="Actual">₦ +34.5M</span>
+            <span data-l="Target">₦ +34.5M</span>
+            <span class="vg" data-l="Delta">₦ +34.5</span>
+            <span data-l="Severity"
+              ><span class="sev sev-o">On Track</span></span
+            >
+            <span class="trend" data-l="Trends">Stable</span>
+            <span class="kdr" data-l="Key Driver"></span>
+            <span class="chv">▾</span>
+          </div>
+          <div class="kdet">
+            <div class="kdet-in">
+              <div class="dtabs">
+                <button class="dtab active" onclick="stab(this, 's3')">
+                  Summary</button
+                ><button class="dtab" onclick="stab(this, 'f3')">
+                  Fishbone
+                </button>
+              </div>
+              <div class="dpane active" id="s3">
+                <div class="sum-grid">
+                  <div class="sum-left">
+                    <div class="si">
+                      <span class="si-tag t-what">What</span
+                      ><span class="si-txt"
+                        >Total Operating Expenses are ON TRACK at ₦+34.5M,
+                        within budget targets.</span
+                      >
+                    </div>
+                    <div class="si">
+                      <span class="si-tag t-trend">Trend</span
+                      ><span class="si-txt"
+                        >Stable. Consistent with prior periods and within
+                        acceptable variance.</span
+                      >
+                    </div>
+                  </div>
+                  <div class="sum-right">
+                    <div class="sc">
+                      <h4>What Moved</h4>
+                      <p>Expenses remained stable within acceptable range.</p>
+                    </div>
+                    <div class="sc">
+                      <h4>How Bad</h4>
+                      <ul>
+                        <li>Actual: ₦+34.5M</li>
+                        <li>Target: ₦+34.5M</li>
+                        <li>On budget — no gap</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dpane" id="f3">
+                <div class="fish-grid">
+                  <div>
+                    <div class="lk-title">Mapped Linked KPIs</div>
+                    <table class="lk-tbl">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Name</th>
+                          <th>Driver</th>
+                          <th>Wtg</th>
+                          <th>Tgt</th>
+                          <th>Act</th>
+                          <th>UOM</th>
+                          <th>Variance</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><span class="kd g"></span></td>
+                          <td>Revenue Growth Rate%</td>
+                          <td>Top-line momentum</td>
+                          <td>35%</td>
+                          <td>5%</td>
+                          <td>98.5%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+1869.0%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Profit Margin%</td>
+                          <td>Profitability Efficiency</td>
+                          <td>25%</td>
+                          <td>10%</td>
+                          <td>37.8%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+286.7%</td>
+                        </tr>
+                        <tr>
+                          <td><span class="kd a"></span></td>
+                          <td>Net Profit Growth Rate%</td>
+                          <td>Profit Trajectory</td>
+                          <td>40%</td>
+                          <td>10%</td>
+                          <td>40%</td>
+                          <td><span class="uom">%</span></td>
+                          <td class="vpos">+34.5</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="leg">
+                      <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="fish-title">RCA Fishbone</div>
+                    <div class="fish-wrap">
+                      <svg
+                        class="fish-svg"
+                        viewBox="0 0 500 260"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="50"
+                          y1="130"
+                          x2="430"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="3"
+                        />
+                        <circle
+                          cx="450"
+                          cy="130"
+                          r="22"
+                          fill="#1a8c00"
+                          stroke="#30d010"
+                          stroke-width="2"
+                        />
+                        <text
+                          x="450"
+                          y="125"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Net
+                        </text>
+                        <text
+                          x="450"
+                          y="136"
+                          text-anchor="middle"
+                          fill="#fff"
+                          font-size="8"
+                          font-weight="700"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <polygon
+                          points="50,130 20,100 20,160"
+                          fill="#1e2040"
+                          stroke="#2a2d55"
+                          stroke-width="1.5"
+                        />
+                        <line
+                          x1="140"
+                          y1="40"
+                          x2="200"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="280"
+                          y1="40"
+                          x2="340"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="160"
+                          y1="220"
+                          x2="220"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <line
+                          x1="300"
+                          y1="220"
+                          x2="360"
+                          y2="130"
+                          stroke="#2a2d55"
+                          stroke-width="2"
+                        />
+                        <rect
+                          x="78"
+                          y="20"
+                          width="128"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="142"
+                          y="37"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="8"
+                          font-family="system-ui"
+                        >
+                          Revenue And Margin
+                        </text>
+                        <rect
+                          x="242"
+                          y="20"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="300"
+                          y="31"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Revenue Growth
+                        </text>
+                        <text
+                          x="300"
+                          y="41"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Rate%
+                        </text>
+                        <rect
+                          x="100"
+                          y="214"
+                          width="116"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="158"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Profit
+                        </text>
+                        <text
+                          x="158"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Margin
+                        </text>
+                        <rect
+                          x="238"
+                          y="214"
+                          width="126"
+                          height="26"
+                          rx="6"
+                          fill="#141630"
+                          stroke="#22254a"
+                        />
+                        <text
+                          x="301"
+                          y="225"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Net Profit
+                        </text>
+                        <text
+                          x="301"
+                          y="235"
+                          text-anchor="middle"
+                          fill="#b1bcd8"
+                          font-size="7.5"
+                          font-family="system-ui"
+                        >
+                          Growth Rate%
+                        </text>
+                        <text
+                          x="250"
+                          y="255"
+                          text-anchor="middle"
+                          fill="#6b7a9e"
+                          font-size="7"
+                          font-family="system-ui"
+                        >
+                          Controls / Timing / Data Quality
+                        </text>
+                      </svg>
+                    </div>
+                    <span><span class="ld h"></span>High</span
+                      ><span><span class="ld m"></span>Medium</span
+                      ><span><span class="ld lo"></span>Low</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /tbl -->
+    </main>
+
+    <script>
+      document.getElementById("tv").addEventListener("click", function () {
+        this.classList.toggle("on");
+        if (this.classList.contains("on")) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      });
+      document.addEventListener("fullscreenchange", function () {
+        if (!document.fullscreenElement)
+          document.getElementById("tv").classList.remove("on");
+      });
+      function tog(id) {
+        document.getElementById(id).classList.toggle("open");
+      }
+      function stab(btn, pid) {
+        var w = btn.closest(".kdet-in");
+        w.querySelectorAll(".dtab").forEach(function (t) {
+          t.classList.remove("active");
+        });
+        w.querySelectorAll(".dpane").forEach(function (p) {
+          p.classList.remove("active");
+        });
+        btn.classList.add("active");
+        document.getElementById(pid).classList.add("active");
+      }
+    </script>
+  </body>
+</html>
