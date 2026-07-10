@@ -127,10 +127,13 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
         border-radius: 50%;
         transition: 0.2s;
       }
-      .tv.on .tv-sw {
+      .tv-toggle.on {
+        border-color: #2dd4bf;
+      }
+      .tv-toggle.on .tv-sw {
         background: #0fae02;
       }
-      .tv.on .tv-sw::after {
+      .tv-toggle.on .tv-sw::after {
         left: 17px;
         background: #fff;
       }
@@ -329,7 +332,7 @@ body{min-height:100vh}
             <i class="fa-solid fa-angle-down"></i>
           </div>
 
-          <div class="pill tv-toggle" role="button" tabindex="0" aria-pressed="false">
+          <div class="pill tv-toggle" id="tv" role="button" tabindex="0" aria-pressed="false">
             TV Mode
 
             <div class="tv-sw"></div>
@@ -572,18 +575,33 @@ Cash Burn Rate
 </main>
 
 <script>
-// Toggle TV button state
 const tvToggle = document.querySelector('.tv-toggle');
+
 if (tvToggle) {
-  tvToggle.addEventListener('click', function () {
-    const isOn = this.classList.toggle('on');
-    this.setAttribute('aria-pressed', String(isOn));
-  });
+  const toggleTvMode = function () {
+    const isOn = tvToggle.classList.toggle('on');
+    tvToggle.setAttribute('aria-pressed', String(isOn));
+
+    if (isOn) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  };
+
+  tvToggle.addEventListener('click', toggleTvMode);
 
   tvToggle.addEventListener('keydown', function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.click();
+      toggleTvMode();
+    }
+  });
+
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement) {
+      tvToggle.classList.remove('on');
+      tvToggle.setAttribute('aria-pressed', 'false');
     }
   });
 }
