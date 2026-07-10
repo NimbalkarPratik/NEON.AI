@@ -17,7 +17,7 @@
         padding: 0;
       }
 
-      .dso {
+      /* .dso {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -25,23 +25,57 @@
         justify-content: flex-start;
         padding: 8px 10px 12px;
         gap: 8px;
+      } */
+
+      .dso-widget {
+        width: 380px;
+        padding: 5px;
+        display: contents;
+        position: relative;
+        align-items: center;
+      }
+
+      .gauge-wrap {
+        position: relative;
+        width: 260px;
+        height: 145px;
+        margin: 0 auto 6px;
+      }
+
+      .gauge-canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      .gauge-val {
+        position: absolute;
+        top: 5%;
+        left: 2%;
+        transform: translateX(-50%);
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+      .gauge-val .pc {
+        font-size: 16px;
+        font-weight: 600;
       }
 
       /* ── GAUGE ── */
-      .gauge-wrap {
+      /* .gauge-wrap {
         position: relative;
         width: min(100%, 248px);
         aspect-ratio: 300 / 170;
         margin-bottom: 2px;
-      }
-      .gauge-svg {
+      } */
+      /* .gauge-svg {
         width: 100%;
         height: 100%;
         display: block;
-      }
+      } */
 
       /* Value */
-      .gauge-val {
+      /* .gauge-val {
         position: absolute;
         top: 5px;
         left: 2%;
@@ -56,7 +90,7 @@
         font-size: 16px;
         font-weight: 600;
         color: #9ca3af;
-      }
+      } */
 
       /* Legend */
       .gauge-leg {
@@ -79,18 +113,90 @@
         border-radius: 50%;
         box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
       }
+      .gauge-leg-d.ex {
+        background: #22c55e;
+      }
+      .gauge-leg-d.ac {
+        background: #84cc16;
+      }
+      .gauge-leg-d.ar {
+        background: #f97316;
+      }
+      /* .gauge-leg {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .gauge-leg-i {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        color: #9ca3af;
+      }
+      .gauge-leg-d {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
+      }
       .gauge-leg-d.ex { background: #22c55e; }
       .gauge-leg-d.ac { background: #84cc16; }
-      .gauge-leg-d.ar { background: #f97316; }
+      .gauge-leg-d.ar { background: #f97316; } */
 
       /* ── METRIC CARDS ── */
-      .metrics {
+      .dso-metrics {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+      }
+      .dm {
+        background: #121425;
+        border: 1px solid #1e2035;
+        border-radius: 8px;
+        padding: 10px 4px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .dm-ico {
+        width: 26px;
+        height: 26px;
+        background: #1a1d35;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: #6b7a9e;
+      }
+      .dm-lb {
+        font-size: 8px;
+        color: #6b7a9e;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        font-weight: 500;
+      }
+      .dm-vl {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .dm-sb {
+        font-size: 7.5px;
+        color: #6b7a9e;
+        line-height: 1.35;
+      }
+      /* .dso-metrics {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 6px;
         width: 100%;
-      }
-      .m-card {
+      } */
+      /* .m-card {
         background: linear-gradient(180deg, #121425, #10131f);
         border: 1px solid #232648;
         border-radius: 8px;
@@ -133,7 +239,7 @@
         font-size: 7px;
         color: #6b7a9e;
         line-height: 1.35;
-      }
+      } */
       html,
       body {
         height: 100vh;
@@ -142,6 +248,7 @@
         color: #fff;
         font-family: "DM Sans", sans-serif;
       }
+      
 
       /* ── TOPBAR ── */
       .topbar {
@@ -1014,7 +1121,7 @@
       }
 
       /* ── RESPONSIVE: TABLET (≤1199px) ── */
-      @media (max-width: 1099px) {
+      @media (max-width: 1149px) {
         html,
         body {
           overflow-y: auto;
@@ -1637,48 +1744,10 @@
               <button class="arrow_right"><img src="./assets/arrow-right.png" alt="" srcset=""></button>
             </div>
           </div>
-          <div class="dso">
+          <div class="dso-widget">
             <!-- GAUGE -->
             <div class="gauge-wrap">
-              <svg class="gauge-svg" viewBox="0 0 300 170">
-                <defs>
-                  <!-- Gradient segments as individual arcs -->
-                </defs>
-
-                <!-- Background shadow -->
-                <path d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="30" stroke-linecap="round"/>
-
-                <!-- Green segment (Excellent) -->
-                <path d="M 30 150 A 120 120 0 0 1 72 58" fill="none" stroke="#22c55e" stroke-width="28" stroke-linecap="round"/>
-
-                <!-- Yellow-green segment -->
-                <path d="M 75 56 A 120 120 0 0 1 120 30" fill="none" stroke="#84cc16" stroke-width="28"/>
-
-                <!-- Yellow segment -->
-                <path d="M 122 29 A 120 120 0 0 1 178 29" fill="none" stroke="#eab308" stroke-width="28"/>
-
-                <!-- Orange segment -->
-                <path d="M 180 30 A 120 120 0 0 1 228 58" fill="none" stroke="#f97316" stroke-width="28"/>
-
-                <!-- Red segment -->
-                <path d="M 230 60 A 120 120 0 0 1 270 150" fill="none" stroke="#ef4444" stroke-width="28" stroke-linecap="round"/>
-
-                <!-- Tick marks at segment boundaries -->
-                <line x1="73" y1="55" x2="78" y2="62" stroke="#0e0f18" stroke-width="3"/>
-                <line x1="121" y1="28" x2="123" y2="36" stroke="#0e0f18" stroke-width="3"/>
-                <line x1="179" y1="28" x2="177" y2="36" stroke="#0e0f18" stroke-width="3"/>
-                <line x1="229" y1="57" x2="224" y2="64" stroke="#0e0f18" stroke-width="3"/>
-
-                <!-- Needle -->
-                <g id="needle" transform="rotate(0, 150, 150)">
-                  <!-- Needle line -->
-                  <line x1="150" y1="150" x2="85" y2="65" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-                  <!-- Center dot outer -->
-                  <circle cx="150" cy="150" r="8" fill="#333" stroke="#555" stroke-width="1"/>
-                  <!-- Center dot inner -->
-                  <circle cx="150" cy="150" r="5" fill="#fff"/>
-                </g>
-              </svg>
+              <canvas class="gauge-canvas" id="gauge" width="520" height="290"></canvas>
               <div class="gauge-val">60<span class="pc">%</span></div>
             </div>
 
@@ -1690,156 +1759,168 @@
             </div>
 
             <!-- Metric Cards -->
-            <div class="metrics">
-              <div class="m-card">
-                <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7a9e" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-                <div class="m-lb">OPEN AR</div>
-                <div class="m-vl">2.4B</div>
-                <div class="m-sub">vs Apr 30, 2024<br>↑ 36%</div>
-              </div>
-              <div class="m-card">
-                <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7a9e" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg></div>
-                <div class="m-lb">OVERDUE AR</div>
-                <div class="m-vl">640M</div>
-                <div class="m-sub">vs Apr 30, 2024<br>↑ 1.7%</div>
-              </div>
-              <div class="m-card">
-                <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7a9e" stroke-width="2"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></div>
-                <div class="m-lb">CREDIT SALES</div>
-                <div class="m-vl">5.1B</div>
-                <div class="m-sub">vs Apr 30, 2024<br>↑ 4.2%</div>
-              </div>
-              <div class="m-card">
-                <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7a9e" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21"/><line x1="3" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21" y2="12"/></svg></div>
-                <div class="m-lb">TARGET DSO</div>
-                <div class="m-vl">30</div>
-                <div class="m-sub">Days</div>
-              </div>
-              <div class="m-card">
-                <div class="m-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#6b7a9e" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-                <div class="m-lb">BPESO GAP</div>
-                <div class="m-vl">8.4</div>
-                <div class="m-sub">Days</div>
-              </div>
+            <div class="dso-metrics">
+              <div class="dm"><div class="dm-ico">📋</div><div class="dm-lb">OPEN AR</div><div class="dm-vl">2.4B</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 36%</div></div>
+              <div class="dm"><div class="dm-ico">⏱</div><div class="dm-lb">OVERDUE AR</div><div class="dm-vl">640M</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 1.7%</div></div>
+              <div class="dm"><div class="dm-ico">📊</div><div class="dm-lb">CREDIT SALES</div><div class="dm-vl">5.1B</div><div class="dm-sb">vs Apr 30, 2024<br>↑ 4.2%</div></div>
+              <div class="dm"><div class="dm-ico">🎯</div><div class="dm-lb">TARGET DSO</div><div class="dm-vl">30</div><div class="dm-sb">Days</div></div>
+              <div class="dm"><div class="dm-ico">⚡</div><div class="dm-lb">BPESO GAP</div><div class="dm-vl">8.4</div><div class="dm-sb">Days</div></div>
             </div>
           </div>
-          <!-- <div class="c-bd dso-bd">
-            <div class="dso-gg">
-              <div class="gw">
-                <svg viewBox="0 0 200 110">
-                  <path
-                    d="M 20 100 A 80 80 0 0 1 60 35"
-                    stroke="#22c55e"
-                    stroke-width="16"
-                    fill="none"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M 62 33 A 80 80 0 0 1 100 20"
-                    stroke="#84cc16"
-                    stroke-width="16"
-                    fill="none"
-                  />
-                  <path
-                    d="M 102 20 A 80 80 0 0 1 140 35"
-                    stroke="#eab308"
-                    stroke-width="16"
-                    fill="none"
-                  />
-                  <path
-                    d="M 142 37 A 80 80 0 0 1 180 100"
-                    stroke="#f97316"
-                    stroke-width="16"
-                    fill="none"
-                    stroke-linecap="round"
-                  />
-                  <line
-                    x1="100"
-                    y1="100"
-                    x2="145"
-                    y2="50"
-                    stroke="#fff"
-                    stroke-width="2"
-                  />
-                  <circle cx="100" cy="100" r="5" fill="#fff" />
-                </svg>
-                <div class="gv">60<span class="pc">%</span></div>
-              </div>
-              <div class="gl">
-                <div class="gl-i">
-                  <div class="gl-d ex"></div>
-                  Excellent
-                </div>
-                <div class="gl-i">
-                  <div class="gl-d ac"></div>
-                  Acceptable
-                </div>
-                <div class="gl-i">
-                  <div class="gl-d ar"></div>
-                  At risk
-                </div>
-              </div>
-              <div class="dso-m">
-                <div class="dm-i">
-                  <div class="dm-ico">📋</div>
-                  <div class="dm-lb">OPEN AR</div>
-                  <div class="dm-vl">2.4B</div>
-                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 36%</div>
-                </div>
-                <div class="dm-i">
-                  <div class="dm-ico">⏱</div>
-                  <div class="dm-lb">OVERDUE AR</div>
-                  <div class="dm-vl">640M</div>
-                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 1.7%</div>
-                </div>
-                <div class="dm-i">
-                  <div class="dm-ico">📊</div>
-                  <div class="dm-lb">CREDIT SALES</div>
-                  <div class="dm-vl">5.1B</div>
-                  <div class="dm-sb">vs Apr 30, 2024<br />↑ 4.2%</div>
-                </div>
-                <div class="dm-i">
-                  <div class="dm-ico">🎯</div>
-                  <div class="dm-lb">TARGET DSO</div>
-                  <div class="dm-vl">30</div>
-                  <div class="dm-sb">Days</div>
-                </div>
-                <div class="dm-i">
-                  <div class="dm-ico">⚡</div>
-                  <div class="dm-lb">BPESO GAP</div>
-                  <div class="dm-vl">8.4</div>
-                  <div class="dm-sb">Days</div>
-                </div>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </main>
 
     <script>
-      (function(){
-        // Animate needle to 60% position
-        // Gauge spans from -90° (left/0%) to +90° (right/100%)
-        // 60% = -90 + (60/100)*180 = -90 + 108 = 18°
-        var pct = 60;
-        var angle = -90 + (pct / 100) * 180;
-        var needle = document.getElementById('needle');
+      // (function(){
+      //   // Animate needle to 60% position
+      //   // Gauge spans from -90° (left/0%) to +90° (right/100%)
+      //   // 60% = -90 + (60/100)*180 = -90 + 108 = 18°
+      //   var pct = 60;
+      //   var angle = -90 + (pct / 100) * 180;
+      //   var needle = document.getElementById('needle');
 
-        // Animate
-        var current = -90;
-        var target = angle;
-        var step = (target - current) / 60;
-        var frame = 0;
+      //   // Animate
+      //   var current = -90;
+      //   var target = angle;
+      //   var step = (target - current) / 60;
+      //   var frame = 0;
 
-        function animate() {
-          frame++;
-          var ease = 1 - Math.pow(1 - frame / 60, 3); // easeOutCubic
-          var a = current + (target - current) * ease;
-          needle.setAttribute('transform', 'rotate(' + a + ', 150, 150)');
-          if (frame < 60) requestAnimationFrame(animate);
-        }
-        requestAnimationFrame(animate);
+      //   function animate() {
+      //     frame++;
+      //     var ease = 1 - Math.pow(1 - frame / 60, 3); // easeOutCubic
+      //     var a = current + (target - current) * ease;
+      //     needle.setAttribute('transform', 'rotate(' + a + ', 150, 150)');
+      //     if (frame < 60) requestAnimationFrame(animate);
+      //   }
+      //   requestAnimationFrame(animate);
+      // })();
+      (function () {
+        var canvas = document.getElementById("gauge");
+        var ctx = canvas.getContext("2d");
+        var W = canvas.width,
+          H = canvas.height;
+        var cx = W / 2,
+          cy = H - 30;
+        var R = 195;
+        var lw = 40;
+        var PI = Math.PI;
+        var value = 60;
+
+        // Color segments [start%, end%, color]
+        var segs = [
+          [0, 0.2, "#16a34a"],
+          [0.2, 0.4, "#22c55e"],
+          [0.4, 0.55, "#84cc16"],
+          [0.55, 0.7, "#eab308"],
+          [0.7, 0.82, "#f97316"],
+          [0.82, 1, "#dc2626"],
+        ];
+
+        // Draw each arc segment
+        segs.forEach(function (s) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, R, PI + s[0] * PI, PI + s[1] * PI);
+          ctx.strokeStyle = s[2];
+          ctx.lineWidth = lw;
+          ctx.lineCap = "butt";
+          ctx.stroke();
+        });
+
+        // Round end caps
+        [
+          [PI, "#16a34a"],
+          [2 * PI, "#dc2626"],
+        ].forEach(function (c) {
+          var x = cx + R * Math.cos(c[0]),
+            y = cy + R * Math.sin(c[0]);
+          ctx.beginPath();
+          ctx.arc(x, y, lw / 2, 0, 2 * PI);
+          ctx.fillStyle = c[1];
+          ctx.fill();
+        });
+
+        // Subtle 3D inner shadow
+        var g = ctx.createRadialGradient(
+          cx,
+          cy - 20,
+          R - lw * 1.2,
+          cx,
+          cy,
+          R + lw * 0.5,
+        );
+        g.addColorStop(0, "rgba(0,0,0,0.18)");
+        g.addColorStop(0.45, "rgba(0,0,0,0)");
+        g.addColorStop(1, "rgba(0,0,0,0.08)");
+        ctx.beginPath();
+        ctx.arc(cx, cy, R + lw, PI, 2 * PI);
+        ctx.arc(cx, cy, R - lw, 2 * PI, PI, true);
+        ctx.closePath();
+        ctx.fillStyle = g;
+        ctx.fill();
+
+        // Needle angle
+        var nAngle = PI + (value / 100) * PI;
+        var nLen = R - 15;
+        var nx = cx + nLen * Math.cos(nAngle);
+        var ny = cy + nLen * Math.sin(nAngle);
+
+        // Needle shadow
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.5)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 4;
+
+        // Tapered needle
+        var bw = 7;
+        var pa = nAngle + PI / 2;
+        var b1x = cx + bw * Math.cos(pa),
+          b1y = cy + bw * Math.sin(pa);
+        var b2x = cx - bw * Math.cos(pa),
+          b2y = cy - bw * Math.sin(pa);
+
+        ctx.beginPath();
+        ctx.moveTo(b1x, b1y);
+        ctx.lineTo(nx, ny);
+        ctx.lineTo(b2x, b2y);
+        ctx.closePath();
+
+        // Needle gradient
+        var ng = ctx.createLinearGradient(cx, cy, nx, ny);
+        ng.addColorStop(0, "#c8ccd5");
+        ng.addColorStop(0.4, "#e8eaf0");
+        ng.addColorStop(1, "#d0d4dc");
+        ctx.fillStyle = ng;
+        ctx.fill();
+        ctx.restore();
+
+        // Needle thin edge highlight
+        ctx.beginPath();
+        ctx.moveTo(b1x, b1y);
+        ctx.lineTo(nx, ny);
+        ctx.lineTo(b2x, b2y);
+        ctx.closePath();
+        ctx.strokeStyle = "rgba(255,255,255,0.12)";
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+
+        // Center hub — outer ring
+        ctx.beginPath();
+        ctx.arc(cx, cy, 12, 0, 2 * PI);
+        var hg = ctx.createRadialGradient(cx, cy - 3, 0, cx, cy, 12);
+        hg.addColorStop(0, "#ffffff");
+        hg.addColorStop(1, "#d0d4dc");
+        ctx.fillStyle = hg;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(0,0,0,0.08)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Center hub — inner dot
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, 2 * PI);
+        ctx.fillStyle = "#a0a4b0";
+        ctx.fill();
       })();
       document.getElementById("tv").addEventListener("click", function () {
         this.classList.toggle("on");
@@ -1869,6 +1950,7 @@
           this.classList.add("selected");
         });
       });
+
     </script>
   </body>
 </html>
