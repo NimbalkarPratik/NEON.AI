@@ -26,6 +26,11 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
 .tb-l .sep{color:#555}
 .tb-r{display:flex;align-items:center;gap:14px}
 .pill{background:#13141e;border:1px solid #252840;border-radius:20px;padding:5px 14px;color:#8a9bc2;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+.menu {
+        width: 5%;
+    align-items: center;
+    justify-content: center;
+}
 .run-info{font-size:11px;color:#6b7a9e}
 
 .topBar {
@@ -126,6 +131,10 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
         background: #555;
         border-radius: 50%;
         transition: 0.2s;
+      }
+      .tv-toggle {
+        background: none;
+        border: none;
       }
       .tv-toggle.on {
         border-color: #2dd4bf;
@@ -307,9 +316,66 @@ body{min-height:100vh}
 .sub-tbl{min-width:720px}
 .kpi-panel-bd{overflow-x:auto}
 
-@media(max-width:1200px){.master-layout{grid-template-columns:2fr 2fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}}
-@media(max-width:768px){.main{padding:12px}.topbar{padding:55px 12px;flex-wrap:nowrap;gap:7px;}.right{justify-content:flex-start}.pill{font-size:11px;padding:4px 10px;height:auto}.bottomBar{padding:6px 0}.tabs{width:100%}.tab{padding:6px 10px;font-size:10px}.hero{flex-direction:column;align-items:flex-start}.card-hd{font-size:12px;gap:8px;flex-wrap:wrap}.card-bd{padding:12px}.hero-title{font-size:18px}.hero-stat .val{font-size:18px}.kp-big-val{font-size:24px}.kp-stats{grid-template-columns:1fr 1fr}.donut-wrap{flex-direction:column;align-items:center}.chart-leg{flex-wrap:wrap;gap:8px 12px}}
-@media(max-width:480px){.master-layout{grid-template-columns:1fr}.main{padding:8px}.topbar{padding:55px 12px;flex-wrap:nowrap;gap:7px;}.left,.right{width:100%}.left{flex-wrap:wrap}.right{gap:8px}.tab{width:100%;justify-content:center;text-align:center}.kp-stats{grid-template-columns:1fr}.sub-tbl{min-width:680px}}
+@media(max-width:1200px){
+    .master-layout{grid-template-columns:2fr 2fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}
+}
+@media(max-width:992px){
+    .pill{
+        font-size: 8px;
+        height: 20px;
+        padding: 0 10px;
+    }
+    .master-layout{grid-template-columns:1fr 1fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+    .pill {
+        height: 20px;
+        padding: 0 0px;
+        font-size: 8px;
+        gap: 6px;
+    }
+    .main{padding:12px}
+    .topbar{padding:30px 12px;flex-wrap:nowrap;gap:7px;}
+    .right{justify-content:flex-start}
+    .bottomBar{padding:6px 0}
+    .tabs{width:auto}
+    .tab{padding:6px 10px;font-size:10px}
+    .hero{flex-direction:column;align-items:flex-start}
+    .card-hd{font-size:12px;gap:8px;flex-wrap:wrap}
+    .card-bd{padding:12px}
+    .hero-title{font-size:18px}
+    .hero-stat .val{font-size:18px}
+    .kp-big-val{font-size:24px}
+    .kp-stats{grid-template-columns:1fr 1fr}
+    .donut-wrap{flex-direction:column;align-items:center}
+    .chart-leg{flex-wrap:wrap;gap:8px 12px}
+}
+@media(max-width:480px){
+    .master-layout{grid-template-columns:2fr 2fr}
+    .right{
+        padding: 15px 0px;
+    }
+    .pill{
+        font-size: 8px;
+        height: 20px;
+        padding: 0 0px;
+        gap: 6px;
+    }
+    .main{padding:8px}
+    .topbar{
+        padding:30px 12px;
+        flex-wrap:nowrap;
+        gap:7px;}
+    .left{flex-wrap:wrap}
+    .tab{
+        justify-content:center;
+        text-align:center;
+        padding: 6px 5px;
+        font-size: 9px;
+        width: auto
+    }
+    .kp-stats{grid-template-columns:1fr}
+    .sub-tbl{min-width:680px}}
 </style>
 </head>
 <body>
@@ -352,7 +418,7 @@ body{min-height:100vh}
             Last 3 months
           </div>
 
-          <div class="pill">
+          <div class="pill menu">
             <i class="fa-solid fa-ellipsis-vertical"></i>
           </div>
         </div>
