@@ -1,1 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Action Items – Paelon Hospital</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
 
+/* ═══ TOPBAR ═══ */
+.topbar{height:56px;background:#0e0f18;border-bottom:1px solid #292929;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
+.tb-l{display:flex;align-items:center;gap:8px;font-size:13px}
+.tb-l .sep{color:#555}
+.tb-r{display:flex;align-items:center;gap:14px}
+.pill{background:#1a1b24;border:1px solid #232632;border-radius:20px;padding:5px 14px;color:#7b8aae;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+.tv{display:flex;align-items:center;gap:7px;font-size:12px;color:#7b8aae;cursor:pointer}
+.tv-sw{width:34px;height:19px;background:#252840;border-radius:10px;position:relative}
+.tv-sw::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;background:#555;border-radius:50%}
+.sync{display:flex;align-items:center;gap:7px;background:rgba(16,217,5,.07);border:1px solid rgba(16,217,5,.18);border-radius:20px;padding:5px 14px;font-size:11px}
+.sync-d{width:7px;height:7px;background:#10d905;border-radius:50%}
+.sync .l{color:#6b7a9e}.sync .b{font-weight:600}
+.btn-per{background:linear-gradient(135deg,#1a3568,#0f2244);border:1px solid #264a80;border-radius:20px;padding:5px 16px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+.more{background:none;border:none;color:#6b7a9e;font-size:18px;cursor:pointer}
+
+.tv.on .tv-sw {
+        background: #0fae02;
+      }
+      .tv.on .tv-sw::after {
+        left: 17px;
+        background: #fff;
+      }
+
+/* ═══ LAYOUT ═══ */
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.content{flex:1;padding:16px 20px;min-width:0}
+.sidebar-r{width:360px;background:#0e0f17;box-shadow:0 0 20px rgba(0,0,0,.15);border-radius:14px 0 0 14px;flex-shrink:0;display:flex;flex-direction:column;overflow-y:auto}
+
+/* ═══ PAGE HEADER ═══ */
+.pg-hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+.pg-hd h1{font-size:24px;font-weight:400;letter-spacing:-.6px}
+.pg-hd .run{font-size:12px;color:#94a3b8}
+
+/* ═══ CONTROLS ═══ */
+.controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.ctrl-l{display:flex;align-items:center;gap:8px;font-size:15px;color:#fff;letter-spacing:-.6px}
+.ctrl-l span{font-weight:400}
+.sel{background:#17192c;border:1px solid #8a9bc2;border-radius:6px;padding:8px;color:#8a9bc2;font-size:14px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:4px;min-width:54px;justify-content:center}
+.search{background:#17192c;border:1px solid #8a9bc2;border-radius:6px;padding:8px;color:#8a9bc2;font-size:14px;font-family:inherit;display:flex;align-items:center;gap:10px;width:170px;justify-content:space-between}
+.search input{background:none;border:none;color:#8a9bc2;font-size:14px;font-family:inherit;outline:none;width:100%}
+.search-ico{color:#8a9bc2;font-size:14px}
+
+/* ═══ TABLE ═══ */
+.tbl{border:1px solid #313548;border-radius:5px;overflow:hidden;background:#13141d}
+.tbl-hd{display:grid;grid-template-columns:60px 1fr 1.2fr 0.7fr 0.8fr 0.6fr 0.8fr 1.2fr;padding:12px 20px;background:#191b2b;border-radius:5px 5px 0 0;font-size:15px;font-weight:600;letter-spacing:.6px;text-transform:capitalize;align-items:center}
+.tbl-row{display:grid;grid-template-columns:60px 1fr 1.2fr 0.7fr 0.8fr 0.6fr 0.8fr 1.2fr;padding:14px 20px;border-top:1px solid #313548;align-items:center;font-size:14px;font-weight:500;letter-spacing:.6px;transition:background .15s}
+.tbl-row:hover{background:rgba(55,140,242,.03)}
+
+/* Status badges */
+.st{padding:4px 12px;border-radius:100px;font-size:14px;font-weight:400;display:inline-block}
+.st-done{background:rgba(15,174,2,.1);border:1px solid #0fae02;color:#0fae02}
+.st-prog{background:rgba(251,192,62,.1);border:1px solid #fbc03e;color:#fbc03e}
+.st-snz{background:#17192c;border:1px solid #8a9bc2;color:#fff}
+
+/* ═══ RIGHT SIDEBAR ═══ */
+.sb-hd{width: 100%;background:linear-gradient(180deg,#151628,#373b60);border-radius:14px 14px 0 0;padding:12px 16px;font-size:16px;font-weight:600;color:#f8fafc;flex-shrink:0}
+.sb-section{padding:16px 12px;display:flex;flex-direction:column;gap:8px}
+.sb-title{font-size:18px;font-weight:600;color:#f8fafc;margin-bottom:4px}
+
+/* Status bar */
+.status-bar{display:flex;height:20px;border-radius:100px;overflow:hidden}
+.sb-seg{height:100%}
+.status-labels{display:flex;justify-content:space-between;margin-top:6px}
+.status-labels span{font-size:12px;font-weight:500;color:#94a3b8}
+
+/* Saved views */
+.sv-btns{display:flex;gap:8px;flex-wrap:wrap}
+.sv-btn{background:#232537;border:1px solid #8a9bc2;border-radius:6px;padding:6px 12px;font-size:14px;color:#e2e8f0;cursor:pointer;font-family:inherit;text-align:center}
+.sv-btn:hover{background:#2a2d48}
+
+/* SLA Breach donut */
+.sla-wrap{display:flex;align-items:center;justify-content:center;position:relative;width:164px;height:164px;margin:0 auto}
+.sla-wrap canvas{width:164px;height:164px}
+.sla-center{position:absolute;display:flex;flex-direction:column;align-items:center}
+.sla-center .sla-val{font-size:24px;font-weight:600;color:#d03d01}
+.sla-center .sla-lbl{font-size:14px;font-weight:500;color:#94a3b8}
+
+/* Recent activity */
+.act-item{display:flex;align-items:center;justify-content:space-between;background:#1e1f2c;border-radius:12px;padding:10px 16px}
+.act-l{display:flex;align-items:center;gap:12px}
+.act-id{font-size:14px;font-weight:500;color:#fff}
+.act-ico{font-size:12px;color:#fff}
+.act-action{font-size:14px;font-weight:500;color:#f8fafc}
+.act-time{font-size:14px;font-weight:500;color:#94a3b8}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1200px){
+  .sidebar-r{width:300px}
+}
+@media(max-width:1000px){
+  .layout{flex-direction:column}
+  .sidebar-r{width:100%;border-radius:0;flex-direction:row;flex-wrap:wrap}
+  .sb-section{flex:1;min-width:250px}
+  .tv.on .tv-sw::after {
+    left: 11px;
+  }
+}
+@media(max-width:768px){
+    .sb-title {
+        font-size: 11px;
+    }
+    .sv-btn {
+        font-size: 10px;
+    }
+    .act-id {
+        font-size: 10px;
+    }
+    .act-action {
+        font-size: 10px;
+    }
+    .sla-wrap {
+        height: 95px;
+    }
+    .st {
+        font-size: 10px;
+    }
+    .ctrl-l {
+        font-size: 10px;
+    }
+    .search {
+        width: 130px;
+    }
+    .btn-per {
+        height: 42px;
+        font-size: 8px;
+    }
+    .sla-wrap canvas {
+        width: 145px;
+        height: 145px;
+    }
+    .sync-d {
+        width: 10px;
+        height: 5px;
+    }
+    .sync {
+        font-size: 8px;
+    }
+
+  .tbl-hd{display:none}
+  .tbl-row{grid-template-columns:60px 1fr 1.2fr 0.7fr 0.8fr 0.6fr 0.8fr 1.2fr;gap:6px;padding:8px 12px;font-size:7px;}
+  .tbl-row>*::before{content:attr(data-l);display:block;font-size:7px;color:#6b7a9e;font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+  .controls{align-items:flex-start}
+}
+@media(max-width:600px){
+  .sb-section{min-width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <div class="tb-l"><span>🏠</span><span class="sep">›</span><span>Paelon Hospital</span></div>
+  <div class="tb-r">
+    <button class="pill">USD <span style="font-size:9px">▾</span></button>
+    <div class="tv" id="tv"><span>TV Mode</span><div class="tv-sw"></div></div>
+    <div class="sync"><span class="sync-d"></span><span class="l">Last synced :</span><span class="b">Jun 22, 2026 1:05 PM</span></div>
+    <button class="btn-per">📅 Last 3 months</button>
+    <button class="more">⋮</button>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <div class="content">
+    <div class="pg-hd">
+      <h1>Action Items</h1>
+      <span class="run">Run #990 · Jun 28, 2026 11:38 AM</span>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="ctrl-l">
+        <span>Show</span>
+        <div class="sel">25 <span style="font-size:9px">▾</span></div>
+        <span>Entries</span>
+      </div>
+      <div class="search"><input type="text" placeholder="Search"><span class="search-ico">🔍</span></div>
+    </div>
+
+    <!-- Table -->
+    <div class="tbl">
+      <div class="tbl-hd">
+        <span>ID</span><span>Title</span><span>Actual</span><span>Assignee</span><span>Status</span><span>Priority</span><span>Due Date</span><span>Last Activity</span>
+      </div>
+
+      <div class="tbl-row">
+        <span data-l="ID">A-4</span>
+        <span data-l="Title">An Urgent Action</span>
+        <span data-l="Actual">Average Consultation Time</span>
+        <span data-l="Assignee">Admin</span>
+        <span data-l="Status"><span class="st st-done">Completed</span></span>
+        <span data-l="Priority">High</span>
+        <span data-l="Due Date">27-03-2026</span>
+        <span data-l="Last Activity">1m ago by Paelon Hospital</span>
+      </div>
+
+      <div class="tbl-row">
+        <span data-l="ID">A-3</span>
+        <span data-l="Title">New Data</span>
+        <span data-l="Actual">Total Revenue</span>
+        <span data-l="Assignee">Admin</span>
+        <span data-l="Status"><span class="st st-prog">In Progress</span></span>
+        <span data-l="Priority">High</span>
+        <span data-l="Due Date">25-02-2026</span>
+        <span data-l="Last Activity">2m ago by Paelon Hospital</span>
+      </div>
+
+      <div class="tbl-row">
+        <span data-l="ID">A-2</span>
+        <span data-l="Title">Test</span>
+        <span data-l="Actual">Infection Control Rate</span>
+        <span data-l="Assignee">Admin</span>
+        <span data-l="Status"><span class="st st-snz">Snoozed</span></span>
+        <span data-l="Priority">High</span>
+        <span data-l="Due Date">27-03-2026</span>
+        <span data-l="Last Activity">5m ago by Paelon Hospital</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RIGHT SIDEBAR ═══ -->
+  <aside class="sidebar-r">
+    <div class="sb-hd">Quick Summary</div>
+
+    <!-- Status Overview -->
+    <div class="sb-section">
+      <div class="sb-title">Status Overview</div>
+      <div class="status-bar">
+        <div class="sb-seg" style="width:28%;background:#8a5deb"></div>
+        <div class="sb-seg" style="width:21%;background:#94d13d"></div>
+        <div class="sb-seg" style="width:20%;background:#2d99fe"></div>
+        <div class="sb-seg" style="width:18%;background:#2ddac1"></div>
+        <div class="sb-seg" style="width:13%;background:#aa2da9"></div>
+      </div>
+      <div class="status-labels">
+        <span>Open</span><span>In Progress</span><span>Done</span><span>Escalated</span><span>Snoozed</span>
+      </div>
+    </div>
+
+    <!-- Saved Views -->
+    <div class="sb-section">
+      <div class="sb-title">Saved Views</div>
+      <div class="sv-btns">
+        <button class="sv-btn">Paelon Hospital</button>
+        <button class="sv-btn">Strategists</button>
+        <button class="sv-btn">Overdue</button>
+      </div>
+    </div>
+
+    <!-- SLA Breach -->
+    <div class="sb-section">
+      <div class="sb-title">SLA Breach</div>
+      <div class="sla-wrap">
+        <canvas id="slaChart" width="328" height="328"></canvas>
+        <div class="sla-center">
+          <span class="sla-val">3/18</span>
+          <span class="sla-lbl">Overdue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="sb-section">
+      <div class="sb-title">Recent Activity</div>
+      <div class="act-item"><div class="act-l"><span class="act-id">A-123</span><span class="act-ico">↗</span><span class="act-action">Open</span></div><span class="act-time">10:12</span></div>
+      <div class="act-item"><div class="act-l"><span class="act-id">A-118</span><span class="act-action">assigned Ops Manager</span></div><span class="act-time">09:43</span></div>
+      <div class="act-item"><div class="act-l"><span class="act-id">A-104</span><span class="act-action">Escalated</span></div><span class="act-time">09:01</span></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+    document.getElementById("tv").addEventListener("click", function () {
+        this.classList.toggle("on");
+        if (this.classList.contains("on")) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      });
+      document.addEventListener("fullscreenchange", function () {
+        if (!document.fullscreenElement)
+          document.getElementById("tv").classList.remove("on");
+      });
+// SLA Breach Donut
+(function(){
+  var c=document.getElementById('slaChart'),ctx=c.getContext('2d');
+  var cx=164,cy=164,R=140,lw=28;
+  var segs=[
+    {v:55,c:'#484848'},
+    {v:28,c:'#8a5deb'},
+    {v:17,c:'#d03d01'}
+  ];
+  var total=0;segs.forEach(function(s){total+=s.v});
+  var ang=-Math.PI/2;
+  segs.forEach(function(s){
+    var sl=s.v/total*Math.PI*2;
+    ctx.beginPath();ctx.arc(cx,cy,R,ang,ang+sl);
+    ctx.strokeStyle=s.c;ctx.lineWidth=lw;ctx.lineCap='butt';ctx.stroke();
+    ang+=sl;
+  });
+})();
+</script>
+</body>
+</html>
