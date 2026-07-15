@@ -725,10 +725,17 @@
           display: none;
         }
         .krow-main {
-          grid-template-columns: 1fr;
-          gap: 6px;
-          padding: 10px 14px;
+          grid-template-columns: 1.4fr 1fr 0.8fr 0.8fr 0.6fr 0.65fr 0.85fr 1.5fr 30px;
+          gap: 4px;
+          padding: 8px 12px;
           position: relative;
+        }
+        .kn {
+          min-height: 18px;
+          line-height: 1.1;
+        }
+        .kn .klink {
+          font-size: 9px;
         }
         .krow-main > *:not(.kn):not(.chv)::before {
           content: attr(data-l);
@@ -740,8 +747,8 @@
         }
         .chv {
           position: absolute;
-          right: 10px;
-          top: 10px;
+          right: 8px;
+          top: 8px;
         }
         .sync,
         .tv {
@@ -750,13 +757,24 @@
       }
       @media (max-width: 600px) {
         :root {
-          font-size: 15px;
+          font-size: 12px;
         }
         .stats {
           grid-template-columns: 1fr 1fr;
         }
         .main {
           padding: 12px;
+        }
+        .krow-main {
+          padding: 8px 10px;
+          gap: 3px;
+        }
+        .kn {
+          min-height: 16px;
+        }
+        .kn .klink {
+          font-size: 6px;
+          line-height: 1.1;
         }
         .sum-right {
           grid-template-columns: 1fr;
