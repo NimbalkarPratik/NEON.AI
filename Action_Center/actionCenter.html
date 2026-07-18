@@ -4,32 +4,126 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Action Items – Paelon Hospital</title>
+<link rel="stylesheet" href="commonStyles.css" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
 
 /* ═══ TOPBAR ═══ */
-.topbar{height:56px;background:#0e0f18;border-bottom:1px solid #292929;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
-.tb-l{display:flex;align-items:center;gap:8px;font-size:13px}
-.tb-l .sep{color:#555}
-.tb-r{display:flex;align-items:center;gap:14px}
-.pill{background:#1a1b24;border:1px solid #232632;border-radius:20px;padding:5px 14px;color:#7b8aae;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
-.tv{display:flex;align-items:center;gap:7px;font-size:12px;color:#7b8aae;cursor:pointer}
-.tv-sw{width:34px;height:19px;background:#252840;border-radius:10px;position:relative}
-.tv-sw::after{content:'';position:absolute;top:2px;left:2px;width:15px;height:15px;background:#555;border-radius:50%}
-.sync{display:flex;align-items:center;gap:7px;background:rgba(16,217,5,.07);border:1px solid rgba(16,217,5,.18);border-radius:20px;padding:5px 14px;font-size:11px}
-.sync-d{width:7px;height:7px;background:#10d905;border-radius:50%}
-.sync .l{color:#6b7a9e}.sync .b{font-weight:600}
-.btn-per{background:linear-gradient(135deg,#1a3568,#0f2244);border:1px solid #264a80;border-radius:20px;padding:5px 16px;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
-.more{background:none;border:none;color:#6b7a9e;font-size:18px;cursor:pointer}
-
-.tv.on .tv-sw {
-        background: #0fae02;
-      }
-      .tv.on .tv-sw::after {
-        left: 17px;
-        background: #fff;
-      }
+  .topbar {
+    height: 44px;
+    background: #0e0f18;
+    border-bottom: 1px solid #1e2035;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tb-l .home {
+    background: none;
+    border: none;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .home img {
+    width: 1rem;
+  }
+  .tb-l {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .tb-l .sep {
+    color: #555;
+  }
+  .tb-r {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pill {
+    background: #13141e;
+    border: 1px solid #252840;
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #8a9bc2;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+  }
+  .tv {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #8a9bc2;
+    cursor: pointer;
+  }
+  .tv-sw {
+    width: 34px;
+    height: 19px;
+    background: #252840;
+    border-radius: 10px;
+    position: relative;
+  }
+  .tv-sw::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 15px;
+    height: 15px;
+    background: #555;
+    border-radius: 50%;
+  }
+  .sync {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(16, 217, 5, 0.07);
+    border: 1px solid rgba(16, 217, 5, 0.18);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+  }
+  .sync-d {
+    width: 7px;
+    height: 7px;
+    background: #10d905;
+    border-radius: 50%;
+  }
+  .sync .l {
+    color: #6b7a9e;
+  }
+  .sync .b {
+    font-weight: 600;
+  }
+  .btn-per {
+    background: linear-gradient(135deg, #1a3568, #0f2244);
+    border: 1px solid #264a80;
+    border-radius: 20px;
+    padding: 5px 16px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .more {
+    background: none;
+    border: none;
+    color: #6b7a9e;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
 
 /* ═══ LAYOUT ═══ */
 .layout{display:flex;min-height:calc(100vh - 56px)}
@@ -101,10 +195,33 @@ body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
   .layout{flex-direction:column}
   .sidebar-r{width:100%;border-radius:0;flex-direction:row;flex-wrap:wrap}
   .sb-section{flex:1;min-width:250px}
-  .tv.on .tv-sw::after {
-    left: 11px;
-  }
 }
+@media(max-width:992px){
+    .chv {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+    }
+    .sync,
+    .tv, .btn-per, .btn-cur {
+      font-size: 4px;
+    }
+    .pill {
+      font-size: 10px;
+    }
+    .topbar {
+      padding: 0;
+    }
+    .sync-d {
+      height: 4px;
+    }
+    .tb-l {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+    }
+  }
 @media(max-width:768px){
     .sb-title {
         font-size: 11px;
@@ -118,7 +235,7 @@ body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
     .act-action {
         font-size: 10px;
     }
-    .sla-wrap {
+    .sla-wrap { 
         height: 95px;
     }
     .st {
@@ -130,24 +247,14 @@ body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
     .search {
         width: 130px;
     }
-    .btn-per {
-        height: 42px;
-        font-size: 8px;
-    }
     .sla-wrap canvas {
         width: 145px;
         height: 145px;
     }
-    .sync-d {
-        width: 10px;
-        height: 5px;
-    }
-    .sync {
-        font-size: 8px;
-    }
 
   .tbl-hd{display:none}
-  .tbl-row{grid-template-columns:60px 1fr 1.2fr 0.7fr 0.8fr 0.6fr 0.8fr 1.2fr;gap:6px;padding:8px 12px;font-size:7px;}
+  .tbl-row{grid-template-columns:60px 1fr 1.2fr 0.7fr 0.8fr 0.6fr 0.8fr 1.2fr;gap:6px;padding:8px 12px;font-size:7px;overflow-x: scroll;scrollbar-width: thin;
+scrollbar-color: #474747 #13141d;}
   .tbl-row>*::before{content:attr(data-l);display:block;font-size:7px;color:#6b7a9e;font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
   .controls{align-items:flex-start}
 }
@@ -160,15 +267,23 @@ body{background:#13141d;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
 
 <!-- ═══ TOPBAR ═══ -->
 <header class="topbar">
-  <div class="tb-l"><span>🏠</span><span class="sep">›</span><span>Paelon Hospital</span></div>
-  <div class="tb-r">
-    <button class="pill">USD <span style="font-size:9px">▾</span></button>
-    <div class="tv" id="tv"><span>TV Mode</span><div class="tv-sw"></div></div>
-    <div class="sync"><span class="sync-d"></span><span class="l">Last synced :</span><span class="b">Jun 22, 2026 1:05 PM</span></div>
-    <button class="btn-per">📅 Last 3 months</button>
-    <button class="more">⋮</button>
-  </div>
-</header>
+      <div class="tb-l">
+        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span><span>Paelon Hospital</span>
+      </div>
+      <div class="tb-r">
+        <button class="pill">USD <span style="font-size: 9px">▾</span></button>
+        <div class="tv" id="tv">
+          <span>TV Mode</span>
+          <div class="tv-sw"></div>
+        </div>
+        <div class="sync">
+          <span class="sync-d"></span><span class="l">Last synced :</span
+          ><span class="b">Jun 22, 2026 1:05 PM</span>
+        </div>
+        <button class="btn-per">📅 Last 3 months</button>
+        <button class="more">⋮</button>
+      </div>
+    </header>
 
 <div class="layout">
   <!-- ═══ MAIN CONTENT ═══ -->
