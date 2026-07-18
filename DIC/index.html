@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Decision Intelligence Centre – Paelon Hospital</title>
+    <link rel="stylesheet" href="commonStyles.css" />
     <style>
       *,
       *::before,
@@ -32,6 +33,15 @@
         position: sticky;
         top: 0;
         z-index: 100;
+      }
+      .tb-l .home {
+        background: none;
+        border: none;
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      .home img {
+        width: 1rem;
       }
       .tb-l {
         display: flex;
@@ -323,6 +333,7 @@
       }
       .krow {
         border-bottom: 1px solid #1e2035;
+        scroll-margin-top: 60px;
       }
       .krow:last-child {
         border-bottom: none;
@@ -699,6 +710,36 @@
         background: #fff;
       }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
       /* ═══ RESPONSIVE ═══ */
       @media (max-width: 1100px) {
         .tbl-hd,
@@ -751,11 +792,29 @@
           top: 8px;
         }
         .sync,
-        .tv {
-          display: none;
+        .tv, .btn-per, .btn-cur {
+          font-size: 4px;
+        }
+        .pill {
+          font-size: 10px;
+        }
+        .topbar {
+          padding: 0;
+        }
+        .sync-d {
+          height: 4px;
+        }
+        .tb-l {
+          display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
         }
       }
       @media (max-width: 600px) {
+        .tb-r {
+          gap: 6px;
+        }
         :root {
           font-size: 12px;
         }
@@ -783,11 +842,6 @@
           flex-direction: column;
           align-items: flex-start;
         }
-        .tb-r .sync,
-        .tb-r .tv,
-        .tb-r .btn-per {
-          display: none;
-        }
       }
       @media (max-width: 420px) {
         .stats {
@@ -800,7 +854,7 @@
     <!-- ═══ TOPBAR ═══ -->
     <header class="topbar">
       <div class="tb-l">
-        <span>🏠</span><span class="sep">›</span><span>Paelon Hospital</span>
+        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span><span>Paelon Hospital</span>
       </div>
       <div class="tb-r">
         <button class="pill">USD <span style="font-size: 9px">▾</span></button>
@@ -1989,7 +2043,23 @@
           document.getElementById("tv").classList.remove("on");
       });
       function tog(id) {
-        document.getElementById(id).classList.toggle("open");
+        var row = document.getElementById(id);
+        var shouldOpen = !row.classList.contains("open");
+
+        document.querySelectorAll(".krow.open").forEach(function (openRow) {
+          if (openRow !== row) {
+            openRow.classList.remove("open");
+          }
+        });
+
+        if (shouldOpen) {
+          row.classList.add("open");
+          setTimeout(function () {
+            row.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 50);
+        } else {
+          row.classList.remove("open");
+        }
       }
       function stab(btn, pid) {
         var w = btn.closest(".kdet-in");
