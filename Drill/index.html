@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Net Profit – KPI Detail</title>
+<title>Drill</title>
 <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
+    <link rel="stylesheet" href="commonStyles.css" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;overflow-x:hidden}
@@ -20,12 +21,124 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
     border-right:1px solid #263042;
 }
 
-/* ── TOPBAR ── */
-.topbar{height:44px;background:#0e0f18;border-bottom:1px solid #1e2035;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
-.tb-l{display:flex;align-items:center;gap:8px;font-size:13px}
-.tb-l .sep{color:#555}
-.tb-r{display:flex;align-items:center;gap:14px}
-.pill{background:#13141e;border:1px solid #252840;border-radius:20px;padding:5px 14px;color:#8a9bc2;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit}
+/* ═══ TOPBAR ═══ */
+  .topbar {
+    height: 44px;
+    background: #0e0f18;
+    border-bottom: 1px solid #1e2035;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .tb-l .home {
+    background: none;
+    border: none;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .home img {
+    width: 1rem;
+    margin-left: 5px;
+  }
+  .tb-l {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .tb-l .sep {
+    color: #555;
+  }
+  .tb-r {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pill {
+    background: #13141e;
+    border: 1px solid #252840;
+    border-radius: 20px;
+    padding: 5px 14px;
+    color: #8a9bc2;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+  }
+  .tv {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #8a9bc2;
+    cursor: pointer;
+  }
+  .tv-sw {
+    width: 34px;
+    height: 19px;
+    background: #252840;
+    border-radius: 10px;
+    position: relative;
+  }
+  .tv-sw::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 15px;
+    height: 15px;
+    background: #555;
+    border-radius: 50%;
+  }
+  .sync {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(16, 217, 5, 0.07);
+    border: 1px solid rgba(16, 217, 5, 0.18);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+  }
+  .sync-d {
+    width: 7px;
+    height: 7px;
+    background: #10d905;
+    border-radius: 50%;
+  }
+  .sync .l {
+    color: #6b7a9e;
+  }
+  .sync .b {
+    font-weight: 600;
+  }
+  .btn-per {
+    background: linear-gradient(135deg, #1a3568, #0f2244);
+    border: 1px solid #264a80;
+    border-radius: 20px;
+    padding: 5px 16px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .more {
+    background: none;
+    border: none;
+    color: #6b7a9e;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+
 .menu {
         width: 5%;
     align-items: center;
@@ -72,19 +185,6 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
         gap: 10px;
       }
 
-      .pill {
-        height: 30px;
-        padding: 0 14px;
-        border-radius: 16px;
-        background: #1a2030;
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #d6d9e0;
-        font-size: 12px;
-      }
-
       /* TV Toggle */
 
       .switch {
@@ -112,39 +212,6 @@ body{background:#0b0c14;color:#fff;font-family:'DM Sans',system-ui,sans-serif;ov
         border-radius: 50%;
         background: #16d463;
         box-shadow: 0 0 10px #16d463;
-      }
-
-      .tv-sw {
-        width: 34px;
-        height: 19px;
-        background: #252840;
-        border-radius: 10px;
-        position: relative;
-      }
-      .tv-sw::after {
-        content: "";
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 15px;
-        height: 15px;
-        background: #555;
-        border-radius: 50%;
-        transition: 0.2s;
-      }
-      .tv-toggle {
-        background: none;
-        border: none;
-      }
-      .tv-toggle.on {
-        border-color: #2dd4bf;
-      }
-      .tv-toggle.on .tv-sw {
-        background: #0fae02;
-      }
-      .tv-toggle.on .tv-sw::after {
-        left: 17px;
-        background: #fff;
       }
 
       /* ================= SECOND BAR ================= */
@@ -299,9 +366,7 @@ canvas.chart{width:100%;height:180px;display:block}
 /* ── RESPONSIVE ── */
 body{min-height:100vh}
 .main{width:100%;max-width:1440px;margin:0 auto}
-.topbar{min-height:44px;padding:10px 20px;gap:12px;flex-wrap:wrap}
 .left,.right{flex-wrap:wrap}
-.pill{white-space:nowrap}
 .bottomBar{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 0}
 .back{position:static;right:auto;margin-right:0}
 .tabs{flex-wrap:wrap;justify-content:flex-start}
@@ -320,26 +385,39 @@ body{min-height:100vh}
     .master-layout{grid-template-columns:2fr 2fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}
 }
 @media(max-width:992px){
-    .pill{
-        font-size: 8px;
-        height: 20px;
-        padding: 0 10px;
-    }
     .master-layout{grid-template-columns:1fr 1fr}.summary-col{position:static}.row-2{grid-template-columns:1fr}
-}
-@media(max-width:768px){
-    .pill {
-        height: 20px;
-        padding: 0 0px;
-        font-size: 8px;
-        gap: 6px;
+    .chv {
+      position: absolute;
+      right: 8px;
+      top: 8px;
     }
+    .sync,
+    .tv, .btn-per, .btn-cur {
+      font-size: 4px;
+    }
+    .pill {
+      font-size: 10px;
+    }
+    .topbar {
+      padding: 0;
+    }
+    .sync-d {
+      height: 4px;
+      width: 4px;
+    }
+    .tb-l {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+    }
+  }
+@media(max-width:768px){
     .main{padding:12px}
-    .topbar{padding:30px 12px;flex-wrap:nowrap;gap:7px;}
     .right{justify-content:flex-start}
     .bottomBar{padding:6px 0}
     .tabs{width:auto}
-    .tab{padding:6px 10px;font-size:10px}
+    .tab{padding:6px 10px;font-size:7px}
     .hero{flex-direction:column;align-items:flex-start}
     .card-hd{font-size:12px;gap:8px;flex-wrap:wrap}
     .card-bd{padding:12px}
@@ -349,29 +427,34 @@ body{min-height:100vh}
     .kp-stats{grid-template-columns:1fr 1fr}
     .donut-wrap{flex-direction:column;align-items:center}
     .chart-leg{flex-wrap:wrap;gap:8px 12px}
+    
 }
-@media(max-width:480px){
-    .master-layout{grid-template-columns:2fr 2fr}
+@media(max-width: 550px) {
+  .master-layout {
+        grid-template-columns: 1fr;
+    }
+  .tab{
+        justify-content:center;
+        text-align:center;
+        padding: 6px 5px;
+        font-size: 9px;
+        width: auto
+    }
+}
+@media(max-width:380px){
+  .master-layout {
+        grid-template-columns: 1fr;
+    }
     .right{
         padding: 15px 0px;
     }
-    .pill{
-        font-size: 8px;
-        height: 20px;
-        padding: 0 0px;
-        gap: 6px;
-    }
     .main{padding:8px}
-    .topbar{
-        padding:30px 12px;
-        flex-wrap:nowrap;
-        gap:7px;}
     .left{flex-wrap:wrap}
     .tab{
         justify-content:center;
         text-align:center;
         padding: 6px 5px;
-        font-size: 9px;
+        font-size: 5px;
         width: auto
     }
     .kp-stats{grid-template-columns:1fr}
@@ -382,47 +465,23 @@ body{min-height:100vh}
 
 <!-- TOPBAR -->
 <header class="topbar">
-        <div class="left">
-          <i class="fa-solid fa-house"></i>
-
-          <a href="#">Paelon Hospital</a>
-
-          <span>›</span>
-
-          <span>Business Health</span>
+      <div class="tb-l">
+        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span><span>Paelon Hospital</span>
+      </div>
+      <div class="tb-r">
+        <button class="pill">USD <span style="font-size: 9px">▾</span></button>
+        <div class="tv" id="tv">
+          <span>TV Mode</span>
+          <div class="tv-sw"></div>
         </div>
-
-        <div class="right">
-          <div class="pill">
-            USD
-            <i class="fa-solid fa-angle-down"></i>
-          </div>
-
-          <div class="pill tv-toggle" id="tv" role="button" tabindex="0" aria-pressed="false">
-            TV Mode
-
-            <div class="tv-sw"></div>
-          </div>
-
-          <div class="pill">
-            <div class="greenDot"></div>
-
-            Last synced :
-
-            <b>Apr 1, 2026 12:00 AM</b>
-          </div>
-
-          <div class="pill">
-            <i class="fa-regular fa-calendar"></i>
-
-            Last 3 months
-          </div>
-
-          <div class="pill menu">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-          </div>
+        <div class="sync">
+          <span class="sync-d"></span><span class="l">Last synced :</span
+          ><span class="b">Jun 22, 2026 1:05 PM</span>
         </div>
-</header>
+        <button class="btn-per">📅 Last 3 months</button>
+        <button class="more">⋮</button>
+      </div>
+    </header>
 
 <main class="main">
 
@@ -642,6 +701,18 @@ Cash Burn Rate
 
 <script>
 const tvToggle = document.querySelector('.tv-toggle');
+document.getElementById("tv").addEventListener("click", function () {
+        this.classList.toggle("on");
+        if (this.classList.contains("on")) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      });
+      document.addEventListener("fullscreenchange", function () {
+        if (!document.fullscreenElement)
+          document.getElementById("tv").classList.remove("on");
+      });
 
 if (tvToggle) {
   const toggleTvMode = function () {
