@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="commonStyles.css" />
     <style>
       *,
       *::before,
@@ -49,8 +50,8 @@
 
       .gauge-val {
         position: absolute;
-        top: 5%;
-        left: 2%;
+        top: 20%;
+        left: -10%;
         transform: translateX(-50%);
         font-size: 25px;
         font-weight: 700;
@@ -249,8 +250,7 @@
         font-family: "DM Sans", sans-serif;
       }
       
-
-      /* ── TOPBAR ── */
+      /* ═══ TOPBAR ═══ */
       .topbar {
         height: 44px;
         background: #0e0f18;
@@ -259,13 +259,9 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 20px;
-      }
-      .tb-l {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
       .tb-l .home {
         background: none;
@@ -276,6 +272,12 @@
       .home img {
         width: 1rem;
       }
+      .tb-l {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
       .tb-l .sep {
         color: #555;
       }
@@ -284,21 +286,18 @@
         align-items: center;
         gap: 14px;
       }
-      .btn-cur {
+      .pill {
         background: #13141e;
         border: 1px solid #252840;
         border-radius: 20px;
         padding: 5px 14px;
         color: #8a9bc2;
         font-size: 13px;
-        font-family: "DM Sans", sans-serif;
         cursor: pointer;
         display: flex;
         align-items: center;
         gap: 5px;
-      }
-      .btn-cur .ar {
-        font-size: 9px;
+        font-family: inherit;
       }
       .tv {
         display: flex;
@@ -324,14 +323,6 @@
         height: 15px;
         background: #555;
         border-radius: 50%;
-        transition: 0.2s;
-      }
-      .tv.on .tv-sw {
-        background: #0fae02;
-      }
-      .tv.on .tv-sw::after {
-        left: 17px;
-        background: #fff;
       }
       .sync {
         display: flex;
@@ -343,7 +334,7 @@
         padding: 5px 14px;
         font-size: 11px;
       }
-      .sync-dot {
+      .sync-d {
         width: 7px;
         height: 7px;
         background: #10d905;
@@ -353,7 +344,6 @@
         color: #6b7a9e;
       }
       .sync .b {
-        color: #fff;
         font-weight: 600;
       }
       .btn-per {
@@ -365,7 +355,36 @@
         font-size: 11px;
         font-weight: 600;
         cursor: pointer;
+        font-family: inherit;
+      }
+      .more {
+        background: none;
+        border: none;
+        color: #6b7a9e;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 0 4px;
+      }
+
+
+      .home img {
+        width: 1rem;
+      }
+      .btn-cur {
+        background: #13141e;
+        border: 1px solid #252840;
+        border-radius: 20px;
+        padding: 5px 14px;
+        color: #8a9bc2;
+        font-size: 13px;
         font-family: "DM Sans", sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .btn-cur .ar {
+        font-size: 9px;
       }
 
       /* ── MAIN ── */
@@ -1361,14 +1380,32 @@
           font-size: 6px;
         }
       }
+      @media (max-width: 900px) {
+        .sync,
+        .tv, .btn-per, .btn-cur {
+          font-size: 4px;
+        }
+        .pill {
+          font-size: 10px;
+        }
+        .topbar {
+          padding: 0;
+        }
+        .sync-d {
+          height: 4px;
+        }
+        .tb-l {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          font-size: 10px;
+        }
+      }
 
       /* ── RESPONSIVE: MOBILE (≤600px) ── */
       @media (max-width: 600px) {
         .grid {
           grid-template-columns: 1fr;
-        }
-        .topbar {
-          padding: 0 8px;
         }
         .main {
           padding: 8px;
@@ -1380,20 +1417,20 @@
   <body>
     <header class="topbar">
       <div class="tb-l">
-        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span
-        ><span>Paelon Hospital</span>
+        <button class="home"><img src="./assets/home.png" alt="" srcset=""></button><span class="sep">›</span><span>Paelon Hospital</span>
       </div>
       <div class="tb-r">
-        <button class="btn-cur">USD <span class="ar">▾</span></button>
+        <button class="pill">USD <span style="font-size: 9px">▾</span></button>
         <div class="tv" id="tv">
           <span>TV Mode</span>
           <div class="tv-sw"></div>
         </div>
         <div class="sync">
-          <span class="sync-dot"></span><span class="l">Last synced :</span
+          <span class="sync-d"></span><span class="l">Last synced :</span
           ><span class="b">Jun 22, 2026 1:05 PM</span>
         </div>
         <button class="btn-per">📅 Last 3 months</button>
+        <button class="more">⋮</button>
       </div>
     </header>
 
